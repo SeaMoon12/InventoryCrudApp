@@ -4,27 +4,39 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class LoginPage extends javax.swing.JPanel {
+public class LoginPage extends javax.swing.JPanel implements ActionListener {
+
+    private ActionListener actionListener;
+
+    private JButton loginButton;
+    private JTextField usernameField;
+    private JTextField passwordField;
+
     public LoginPage() {
         // i wanna see the page borders
-//        this.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+        // this.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
 
         // setup
         this.setLayout(new MigLayout("ax center, ay center"));
         this.setSize(400, 300);
 
+        // Setup Components
         JLabel usernameLabel = new JLabel("Username");
         JLabel passwordLabel = new JLabel("Password");
 
-        JTextField usernameField = new JTextField();
+        usernameField = new JTextField();
         usernameField.setPreferredSize(new Dimension(200, 30));
 
-        JTextField passwordField = new JTextField();
+        passwordField = new JTextField();
         passwordField.setPreferredSize(new Dimension(200, 30));
 
-        JButton loginButton = new JButton("Login");
+        loginButton = new JButton("Login");
+        loginButton.addActionListener(this);
 
+        // Add components to panel
         this.add(usernameLabel);
         this.add(usernameField, "wrap");
 
@@ -32,5 +44,24 @@ public class LoginPage extends javax.swing.JPanel {
         this.add(passwordField, "wrap");
 
         this.add(loginButton, "span, center");
+    }
+
+    public String getUsername() {
+        return usernameField.getText();
+    }
+
+    public String getPassword() {
+        return passwordField.getText();
+    }
+
+    public void addEvent(ActionListener actionListener) {
+        this.actionListener = actionListener;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == loginButton) {
+            actionListener.actionPerformed(e);
+        }
     }
 }
