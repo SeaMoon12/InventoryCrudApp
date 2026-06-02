@@ -9,7 +9,7 @@ import java.awt.*;
 public class MainPage extends JPanel {
     public MainPage() {
         this.setLayout(new MigLayout());
-        this.setBackground(Color.GREEN);
+        this.setBackground(new Color(0xd9d9d9));
 
     }
 }

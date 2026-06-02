@@ -12,7 +12,7 @@ public class SidePanelButton extends JPanel {
     public SidePanelButton() {
         this.setLayout(new MigLayout());
         this.setPreferredSize(new Dimension(200, 50));
-        this.setBackground(Color.RED);
+        this.setBackground(Color.PINK);
 
         this.buttonName = new JLabel("Button Name");
         this.add(this.buttonName);
