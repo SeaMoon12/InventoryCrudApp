@@ -1,4 +1,4 @@
-package com.inventory.component;
+package com.inventory.pages;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -13,14 +13,14 @@ public class LoginPage extends javax.swing.JPanel implements ActionListener {
 
     private JButton loginButton;
     private JTextField usernameField;
-    private JTextField passwordField;
+    private JPasswordField passwordField;
 
     public LoginPage() {
         // i wanna see the page borders
         // this.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
 
         // setup
-        this.setLayout(new MigLayout("ax center, ay center"));
+        this.setLayout(new MigLayout("ax center, ay center, insets 0"));
         this.setSize(400, 300);
 
         // Setup Components
@@ -30,7 +30,7 @@ public class LoginPage extends javax.swing.JPanel implements ActionListener {
         usernameField = new JTextField();
         usernameField.setPreferredSize(new Dimension(200, 30));
 
-        passwordField = new JTextField();
+        passwordField = new JPasswordField();
         passwordField.setPreferredSize(new Dimension(200, 30));
 
         loginButton = new JButton("Login");

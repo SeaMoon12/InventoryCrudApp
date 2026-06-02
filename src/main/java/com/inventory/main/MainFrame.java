@@ -1,7 +1,7 @@
 package com.inventory.main;
 
-import com.inventory.component.DashboardPage;
-import com.inventory.component.LoginPage;
+import com.inventory.pages.DashboardPage;
+import com.inventory.pages.LoginPage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -15,8 +15,8 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         setup();
 
-        this.add(loginPage);
-        this.add(dashboardPage);
+        this.add(loginPage, "align center center");
+        this.add(dashboardPage, "pos 0 0 100% 100%");
 
         // set Initial visibility
         this.loginPage.setVisible(true);
@@ -44,6 +44,6 @@ public class MainFrame extends javax.swing.JFrame {
         this.setTitle("Inventory Management System");
         this.setSize(800, 600);
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        this.setLayout(new MigLayout("debug, ax center, ay center, hidemode 3"));
+        this.setLayout(new MigLayout("debug, fill, hidemode 3, insets 0"));
     }
 }
