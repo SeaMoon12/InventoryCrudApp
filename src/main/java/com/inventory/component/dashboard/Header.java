@@ -1,4 +1,4 @@
-package com.inventory.component;
+package com.inventory.component.dashboard;
 
 import net.miginfocom.swing.MigLayout;
 

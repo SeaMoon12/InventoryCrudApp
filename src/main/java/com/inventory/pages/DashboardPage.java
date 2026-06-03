@@ -1,6 +1,6 @@
 package com.inventory.pages;
 
-import com.inventory.component.Header;
+import com.inventory.component.dashboard.Header;
 import com.inventory.component.dashboard.MainPage;
 import com.inventory.component.dashboard.SidePanel;
 import net.miginfocom.swing.MigLayout;
