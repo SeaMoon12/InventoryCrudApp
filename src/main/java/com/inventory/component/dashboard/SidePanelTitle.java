@@ -4,19 +4,25 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 public class SidePanelTitle extends JPanel {
 
+    private ImageIcon logo;
+    private JLabel titleLogo = new JLabel();
     private JLabel titleLabel = new JLabel();
 
     public SidePanelTitle() {
         this.setLayout(new MigLayout("debug"));
         this.setPreferredSize(new Dimension(200, 50));
-        this.setBackground(Color.DARK_GRAY);
+        this.setOpaque(false);
 
-        titleLabel.setText("Inventory");
+        logo = new ImageIcon("src/main/resources/images/logo.png");
+        titleLogo.setIcon(logo);
 
+        titleLabel.setText("IMS");
+
+        this.add(titleLogo);
         this.add(titleLabel);
-        this.setVisible(false);
     }
 }

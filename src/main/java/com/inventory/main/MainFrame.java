@@ -1,5 +1,6 @@
 package com.inventory.main;
 
+import com.inventory.component.login.LoginButtonListener;
 import com.inventory.pages.DashboardPage;
 import com.inventory.pages.LoginPage;
 import net.miginfocom.swing.MigLayout;
@@ -15,26 +16,22 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         setup();
 
-        this.add(loginPage, "align center center");
+        this.add(loginPage, "grow");
         this.add(dashboardPage, "pos 0 0 100% 100%");
 
         // set Initial visibility
         this.loginPage.setVisible(true);
         this.dashboardPage.setVisible(false);
 
-        loginPage.addEvent(new ActionListener() {
+        loginPage.setLoginButtonListener(new LoginButtonListener() {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                try {
-                    if (loginPage.getUsername().equals("admin") && loginPage.getPassword().equals("1234")) {
-                        loginPage.setVisible(false);
-                        dashboardPage.setVisible(true);
-                        // set dashboard visibility to true
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Invalid username or password");
-                    }
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+            public void onLoginButtonClick(String username, String password) {
+                if (username.equals("admin") && password.equals("1234")) {
+                    // Hide login page and show dashboard page
+                    loginPage.setVisible(false);
+                    dashboardPage.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(MainFrame.this, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

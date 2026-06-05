@@ -19,7 +19,7 @@ public class CreateCard extends ShadowCard {
     private JButton createButton;
 
     public CreateCard() {
-        this.setLayout(new MigLayout());
+        this.setLayout(new MigLayout("insets 30"));
         productName = new JLabel("Product Name");
         productNameText = new JTextField();
         category = new JLabel("Category");
