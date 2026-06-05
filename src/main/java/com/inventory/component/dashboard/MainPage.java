@@ -25,6 +25,7 @@ public class MainPage extends JPanel {
         stockHistory = new HistoryCard();
         card5 = new Card5();
 
+        this.add(Box.createVerticalStrut(1), "cell 0 3");
         this.add(stock, "cell 0 0, grow");
         this.add(card2, "cell 1 0, grow");
         this.add(card3, "cell 2 0 1 2, grow");

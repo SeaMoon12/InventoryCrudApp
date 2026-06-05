@@ -1,5 +1,6 @@
 package com.inventory.pages;
 
+import com.inventory.component.dashboard.SidePanelButton;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -65,3 +66,4 @@ public class LoginPage extends javax.swing.JPanel implements ActionListener {
         }
     }
 }
+
