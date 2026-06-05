@@ -96,7 +96,7 @@ public class SidePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
-        Color colorTopRight = new Color(0x6b41bf);
+        Color colorTopRight = new Color(0x8B41BF);
         Color colorBottomLeft = new Color(0x0e1938);
         GradientPaint colorGrad = new GradientPaint(getWidth(), 0, colorTopRight, 0, getHeight(), colorBottomLeft);
         g2D.setPaint(colorGrad);
