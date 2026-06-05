@@ -7,6 +7,8 @@ import java.awt.*;
 
 public class SidePanel extends JPanel {
 
+    private PageNavigatorListener navListener;
+
     private SidePanelTitle title;
     private SidePanelButton dashboard;
     private SidePanelButton create;
@@ -80,17 +82,13 @@ public class SidePanel extends JPanel {
         });
     }
 
+    public void setNavListener(PageNavigatorListener listener) {
+        this.navListener = listener;
+    }
+
     private void performActionOnClick(String button) {
-        if (button.equals("Dashboard")) {
-            System.out.println("Dashboard Button Clicked");
-        } else if (button.equals("Create")) {
-            System.out.println("Create Button Clicked");
-        } else if (button.equals("Update")) {
-            System.out.println("Update Button Clicked");
-        } else if (button.equals("Delete")) {
-            System.out.println("Delete Button Clicked");
-        } else if (button.equals("Logout")) {
-            System.out.println("Logout Button Clicked");
+        if (this.navListener != null) {
+            this.navListener.onNavigate(button);
         }
     }
 

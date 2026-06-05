@@ -2,6 +2,7 @@ package com.inventory.pages;
 
 import com.inventory.component.dashboard.Header;
 import com.inventory.component.dashboard.MainPage;
+import com.inventory.component.dashboard.PageNavigatorListener;
 import com.inventory.component.dashboard.SidePanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -26,6 +27,13 @@ public class DashboardPage extends javax.swing.JPanel implements ActionListener 
 
         this.mainPage = new MainPage();
         this.add(this.mainPage, "height 90%, pos 20% 10% 100% 100%");
+
+        sidePanel.setNavListener(new PageNavigatorListener() {
+            @Override
+            public void onNavigate(String pageName) {
+                mainPage.showPage(pageName);
+            }
+        });
     }
 
     @Override

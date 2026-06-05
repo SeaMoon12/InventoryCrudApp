@@ -32,4 +32,18 @@ public class MainPage extends JPanel {
         this.add(stockHistory, "cell 0 1 2 3, grow");
         this.add(card5, "cell 2 2 1 2, grow");
     }
+
+    public void showPage(String pageName) {
+        if (pageName.equals("Dashboard")) {
+            System.out.println("Dashboard Button Clicked");
+        } else if (pageName.equals("Create")) {
+            System.out.println("Create Button Clicked");
+        } else if (pageName.equals("Update")) {
+            System.out.println("Update Button Clicked");
+        } else if (pageName.equals("Delete")) {
+            System.out.println("Delete Button Clicked");
+        } else if (pageName.equals("Logout")) {
+            System.out.println("Logout Button Clicked");
+        }
+    }
 }
