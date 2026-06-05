@@ -17,5 +17,6 @@ public class SidePanelTitle extends JPanel {
         titleLabel.setText("Inventory");
 
         this.add(titleLabel);
+        this.setVisible(false);
     }
 }

@@ -1,4 +1,4 @@
-package com.inventory.component.cards;
+package com.inventory.component.main_dashboard;
 
 import com.inventory.component.dashboard.ShadowCard;
 
