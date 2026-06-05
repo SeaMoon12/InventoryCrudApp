@@ -41,6 +41,6 @@ public class MainFrame extends javax.swing.JFrame {
         this.setTitle("Inventory Management System");
         this.setSize(800, 600);
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        this.setLayout(new MigLayout("debug, fill, hidemode 3, insets 0"));
+        this.setLayout(new MigLayout("fill, hidemode 3, insets 0"));
     }
 }

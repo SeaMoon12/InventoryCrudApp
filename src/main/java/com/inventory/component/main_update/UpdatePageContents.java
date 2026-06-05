@@ -11,7 +11,7 @@ public class UpdatePageContents extends JPanel {
     private UpdateCard updateCard;
 
     public UpdatePageContents() {
-        this.setLayout(new MigLayout("debug"));
+        this.setLayout(new MigLayout());
         titleLabel = new JLabel("Update Existing Data");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
 

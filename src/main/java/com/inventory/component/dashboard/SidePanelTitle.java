@@ -13,7 +13,7 @@ public class SidePanelTitle extends JPanel {
     private JLabel titleLabel = new JLabel();
 
     public SidePanelTitle() {
-        this.setLayout(new MigLayout("debug"));
+        this.setLayout(new MigLayout());
         this.setPreferredSize(new Dimension(200, 50));
         this.setOpaque(false);
 

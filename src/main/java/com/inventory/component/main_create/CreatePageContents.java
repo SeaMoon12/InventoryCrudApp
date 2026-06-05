@@ -11,7 +11,7 @@ public class CreatePageContents extends JPanel {
     private CreateCard createCard;
 
     public CreatePageContents() {
-        this.setLayout(new MigLayout("debug"));
+        this.setLayout(new MigLayout());
         titleLabel = new JLabel("Input new data");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
 

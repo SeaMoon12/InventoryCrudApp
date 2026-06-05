@@ -8,7 +8,7 @@ import java.awt.*;
 public class Header extends JPanel {
 
     public Header() {
-        this.setLayout(new MigLayout("debug"));
+        this.setLayout(new MigLayout());
         this.setBackground(Color.WHITE);
     }
 }
