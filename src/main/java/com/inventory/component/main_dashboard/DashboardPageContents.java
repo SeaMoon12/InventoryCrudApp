@@ -3,6 +3,7 @@ package com.inventory.component.main_dashboard;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class DashboardPageContents extends JPanel {
 
@@ -12,12 +13,13 @@ public class DashboardPageContents extends JPanel {
     private HistoryCard stockHistory;
     private Card5 card5;
 
-    public DashboardPageContents() {
-        this.setLayout(new MigLayout("fill, gap 8"));
+    public DashboardPageContents(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
+        this.setLayout(new MigLayout("fill, gap 8", "[grow, fill] [grow, fill] [30%!, fill]", "[30%!, fill] [grow, fill]"));
+
         stock = new StocksCard();
         card2 = new Card2();
         card3 = new Card3();
-        stockHistory = new HistoryCard();
+        stockHistory = new HistoryCard(productsTableModel, transactionsTableModel);
         card5 = new Card5();
 
         this.add(Box.createVerticalStrut(1), "cell 0 3");

@@ -7,23 +7,31 @@ import com.inventory.component.main_update.UpdatePageContents;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 // This is where all the components will be added to the main page, such as the dashboard, products, etc.
 public class MainPage extends JPanel {
 
-    private DashboardPageContents dashboardPageContents = new DashboardPageContents();
-    private CreatePageContents createPageContents = new CreatePageContents();
-    private UpdatePageContents updatePageContents = new UpdatePageContents();
-    private DeletePageContents deletePageContents = new DeletePageContents();
+    private DashboardPageContents dashboardPageContents;
+    private CreatePageContents createPageContents;
+    private UpdatePageContents updatePageContents;
+    private DeletePageContents deletePageContents;
 
-    public MainPage() {
+    public MainPage(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
         this.setLayout(new MigLayout("fill, insets 0, hidemode 3"));
         this.setBackground(new Color(0xd9d9d9));
 
+        dashboardPageContents = new DashboardPageContents(productsTableModel, transactionsTableModel);
         this.add(dashboardPageContents, "cell 0 0, grow");
+
+        createPageContents = new CreatePageContents(productsTableModel, transactionsTableModel);
         this.add(createPageContents, "cell 0 0, grow");
+
+        updatePageContents = new UpdatePageContents(productsTableModel, transactionsTableModel);
         this.add(updatePageContents, "cell 0 0, grow");
+
+        deletePageContents = new DeletePageContents(productsTableModel, transactionsTableModel);
         this.add(deletePageContents, "cell 0 0, grow");
 
         hideAllPages();

@@ -3,6 +3,7 @@ package com.inventory.component.main_create;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class CreatePageContents extends JPanel {
@@ -10,7 +11,7 @@ public class CreatePageContents extends JPanel {
     private JLabel titleLabel;
     private CreateCard createCard;
 
-    public CreatePageContents() {
+    public CreatePageContents(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
         this.setLayout(new MigLayout());
         titleLabel = new JLabel("Input new data");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));

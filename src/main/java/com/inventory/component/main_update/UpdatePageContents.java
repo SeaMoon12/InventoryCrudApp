@@ -3,6 +3,7 @@ package com.inventory.component.main_update;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class UpdatePageContents extends JPanel {
@@ -10,7 +11,7 @@ public class UpdatePageContents extends JPanel {
     private JLabel titleLabel;
     private UpdateCard updateCard;
 
-    public UpdatePageContents() {
+    public UpdatePageContents(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
         this.setLayout(new MigLayout());
         titleLabel = new JLabel("Update Existing Data");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
