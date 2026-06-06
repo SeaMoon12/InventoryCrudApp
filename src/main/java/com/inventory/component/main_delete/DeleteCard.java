@@ -1,6 +1,6 @@
 package com.inventory.component.main_delete;
 
-import com.inventory.component.LightGreyTextField;
+import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
 import net.miginfocom.swing.MigLayout;
 
@@ -17,7 +17,7 @@ public class DeleteCard extends ShadowCard {
     private JLabel selectedLabel = new JLabel();
 
     private JLabel dropdownSelectionLabel;
-    private LightGreyTextField dropdownSelectionText;
+    private CustomTextField dropdownSelectionText;
 
     private JButton deleteButton;
 
@@ -30,7 +30,7 @@ public class DeleteCard extends ShadowCard {
 
         dropdownSelectionLabel = new JLabel("Product ID");
         dropdownSelectionLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        dropdownSelectionText = new LightGreyTextField();
+        dropdownSelectionText = new CustomTextField(new Color(0xd9d9d9), "Enter product ID...");
 
         deleteButton = new JButton("Delete");
 
@@ -56,8 +56,10 @@ public class DeleteCard extends ShadowCard {
         selectedLabel.setText(selected);
         if (selected.equals("Data")) {
             dropdownSelectionLabel.setText("Product ID");
+            dropdownSelectionText.setPlaceholder("Enter product ID...");
         } else if (selected.equals("Transaction")) {
             dropdownSelectionLabel.setText("Transaction ID");
+            dropdownSelectionText.setPlaceholder("Enter transaction ID...");
         }
     }
 }

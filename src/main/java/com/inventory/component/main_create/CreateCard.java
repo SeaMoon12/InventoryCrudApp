@@ -1,6 +1,6 @@
 package com.inventory.component.main_create;
 
-import com.inventory.component.LightGreyTextField;
+import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
 import net.miginfocom.swing.MigLayout;
 
@@ -10,13 +10,13 @@ import java.awt.*;
 public class CreateCard extends ShadowCard {
 
     private JLabel productName;
-    private LightGreyTextField productNameText;
+    private CustomTextField productNameText;
 
     private JLabel category;
-    private LightGreyTextField categoryText;
+    private CustomTextField categoryText;
 
     private JLabel stock;
-    private LightGreyTextField stockText;
+    private CustomTextField stockText;
 
     private JButton createButton;
 
@@ -24,15 +24,15 @@ public class CreateCard extends ShadowCard {
         this.setLayout(new MigLayout("insets 25"));
         productName = new JLabel("Product Name");
         productName.setFont(new Font("Arial", Font.BOLD, 18));
-        productNameText = new LightGreyTextField();
+        productNameText = new CustomTextField(new Color(0xd9d9d9), "Enter product name...");
 
         category = new JLabel("Category");
         category.setFont(new Font("Arial", Font.BOLD, 18));
-        categoryText = new LightGreyTextField();
+        categoryText = new CustomTextField(new Color(0xd9d9d9), "Enter product category...");
 
         stock = new JLabel("Stock");
         stock.setFont(new Font("Arial", Font.BOLD, 18));
-        stockText = new LightGreyTextField();
+        stockText = new CustomTextField(new Color(0xd9d9d9), "Enter product stock...");
 
         createButton = new JButton("Add Data");
 

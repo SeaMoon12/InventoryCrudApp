@@ -1,8 +1,7 @@
 package com.inventory.component.main_update;
 
-import com.inventory.component.LightGreyTextField;
+import com.inventory.component.CustomTextField;
 import com.inventory.component.RoundedPanel;
-import com.inventory.component.WhiteTextField;
 import com.inventory.component.dashboard.ShadowCard;
 import net.miginfocom.swing.MigLayout;
 
@@ -12,14 +11,14 @@ import java.awt.*;
 public class UpdateCard extends ShadowCard {
 
     private JLabel productID;
-    private LightGreyTextField productIDText;
+    private CustomTextField productIDText;
     private JPanel updateDetailsPanel;
     private JLabel productName;
-    private WhiteTextField productNameText;
+    private CustomTextField productNameText;
     private JLabel category;
-    private WhiteTextField categoryText;
+    private CustomTextField categoryText;
     private JLabel stock;
-    private WhiteTextField stockText;
+    private CustomTextField stockText;
     private JButton updateButton;
 
     public UpdateCard() {
@@ -27,7 +26,7 @@ public class UpdateCard extends ShadowCard {
 
         productID = new JLabel("Product ID");
         productID.setFont(new Font("Arial", Font.BOLD, 18));
-        productIDText = new LightGreyTextField();
+        productIDText = new CustomTextField(new Color(0xd9d9d9), "Enter product ID...");
 
         updateDetailsPanel = new RoundedPanel();
         updateDetailsPanel.setLayout(new MigLayout("insets 15"));
@@ -35,15 +34,15 @@ public class UpdateCard extends ShadowCard {
 
         productName = new JLabel("Product Name");
         productName.setFont(new Font("Arial", Font.BOLD, 14));
-        productNameText = new WhiteTextField();
+        productNameText = new CustomTextField(Color.WHITE, "Enter product name...");
 
         category = new JLabel("Category");
         category.setFont(new Font("Arial", Font.BOLD, 14));
-        categoryText = new WhiteTextField();
+        categoryText = new CustomTextField(Color.WHITE, "Enter product category...");
 
         stock = new JLabel("Stock");
         stock.setFont(new Font("Arial", Font.BOLD, 14));
-        stockText = new WhiteTextField();
+        stockText = new CustomTextField(Color.WHITE, "Enter product stock...");
 
         updateDetailsPanel.add(productName, "width 100%, wrap");
         updateDetailsPanel.add(productNameText, "width 100%, wrap");

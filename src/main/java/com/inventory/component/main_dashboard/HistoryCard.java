@@ -1,7 +1,6 @@
 package com.inventory.component.main_dashboard;
 
-import com.inventory.component.LightGreyTextField;
-import com.inventory.component.WhiteTextField;
+import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
 import net.miginfocom.swing.MigLayout;
 
@@ -20,7 +19,7 @@ public class HistoryCard extends ShadowCard {
     private JLabel selectedTable;
 
     private JLabel searchLabel;
-    private LightGreyTextField searchTextField;
+    private CustomTextField searchTextField;
 
     private JTable productsTable;
     private DefaultTableModel productsTableModel;
@@ -43,7 +42,7 @@ public class HistoryCard extends ShadowCard {
         selectedTable = new JLabel(options[0]);
 
         searchLabel = new JLabel("Search: ");
-        searchTextField = new LightGreyTextField();
+        searchTextField = new CustomTextField(new Color(0xd9d9d9), "Enter search?");
         searchTextField.setPreferredSize(new Dimension(100, getHeight()));
 
         this.add(cardTitle, "split 2");
