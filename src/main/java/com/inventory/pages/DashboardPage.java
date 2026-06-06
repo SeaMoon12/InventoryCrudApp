@@ -67,8 +67,20 @@ public class DashboardPage extends javax.swing.JPanel implements ActionListener 
                 {"8", "5", "3", "Outgoing", "2026-7-14"}
         };
 
-        productsTableModel = new DefaultTableModel(tempProductData, tempProductColumns);
-        transactionsTableModel = new DefaultTableModel(tempTransactionData, tempTransactionColumns);
+        productsTableModel = new DefaultTableModel(tempProductData, tempProductColumns) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        transactionsTableModel = new DefaultTableModel(tempTransactionData, tempTransactionColumns) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+
     }
 
     @Override
