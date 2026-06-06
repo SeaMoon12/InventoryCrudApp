@@ -13,13 +13,13 @@ public class DashboardPageContents extends JPanel {
     private HistoryCard stockHistory;
     private Card5 card5;
 
-    public DashboardPageContents(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
+    public DashboardPageContents() {
         this.setLayout(new MigLayout("fill, gap 8", "[grow, fill] [grow, fill] [30%!, fill]", "[30%!, fill] [grow, fill]"));
 
         stock = new StocksCard();
         card2 = new Card2();
         card3 = new Card3();
-        stockHistory = new HistoryCard(productsTableModel, transactionsTableModel);
+        stockHistory = new HistoryCard();
         card5 = new Card5();
 
         this.add(Box.createVerticalStrut(1), "cell 0 3");
@@ -28,5 +28,9 @@ public class DashboardPageContents extends JPanel {
         this.add(card3, "cell 2 0 1 2, grow");
         this.add(stockHistory, "cell 0 1 2 3, grow");
         this.add(card5, "cell 2 2 1 2, grow");
+    }
+
+    public HistoryCard getStockHistory() {
+        return stockHistory;
     }
 }

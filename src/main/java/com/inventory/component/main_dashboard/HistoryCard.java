@@ -30,26 +30,13 @@ public class HistoryCard extends ShadowCard {
     private JScrollPane productsScrollPane;
     private JScrollPane transactionsScrollPane;
 
-    public HistoryCard(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
+    public HistoryCard() {
         this.setLayout(new MigLayout("fill, insets 20, hidemode 3"));
         this.productsTableModel = productsTableModel;
         this.transactionsTableModel = transactionsTableModel;
 
-        cardTitle = new JLabel("Stock History");
-
-        tableDropdown = new JComboBox<>(options);
-        tableDropdown.setFont(new Font("Arial", Font.BOLD, 14));
-        selectedTable = new JLabel(options[0]);
-
-        searchLabel = new JLabel("Search: ");
-        searchTextField = new CustomTextField(new Color(0xd9d9d9), "Enter search?");
-        searchTextField.setPreferredSize(new Dimension(100, getHeight()));
-
-        this.add(cardTitle, "split 2");
-        this.add(tableDropdown);
-        this.add(searchLabel, "split 2, align right");
-        this.add(searchTextField, "wrap, align right");
-
+        initComponents();
+        addComponents();
         displayData();
 
         tableDropdown.addActionListener(new ActionListener() {
@@ -70,31 +57,47 @@ public class HistoryCard extends ShadowCard {
         });
     }
 
+    private void initComponents() {
+        cardTitle = new JLabel("Stock History");
+
+        tableDropdown = new JComboBox<>(options);
+        tableDropdown.setFont(new Font("Arial", Font.BOLD, 14));
+        selectedTable = new JLabel(options[0]);
+
+        searchLabel = new JLabel("Search: ");
+        searchTextField = new CustomTextField(new Color(0xd9d9d9), "Enter search?");
+        searchTextField.setPreferredSize(new Dimension(100, getHeight()));
+
+    }
+
+    private void addComponents() {
+        this.add(cardTitle, "split 2");
+        this.add(tableDropdown);
+        this.add(searchLabel, "split 2, align right");
+        this.add(searchTextField, "wrap, align right");
+    }
+
     private void displayData() {
         productsTable = new JTable(productsTableModel);
         transactionsTable = new JTable(transactionsTableModel);
 
-        showGrid(productsTable);
-        showGrid(transactionsTable);
-
         productsScrollPane = new JScrollPane(productsTable);
         transactionsScrollPane = new JScrollPane(transactionsTable);
 
-        productsScrollPane.setBorder(BorderFactory.createLineBorder(new Color(0xd9d9d9)));
-        transactionsScrollPane.setBorder(BorderFactory.createLineBorder(new Color(0xd9d9d9)));
-
-        this.add(productsScrollPane, "cell 0 1, span 2, grow");
-        this.add(transactionsScrollPane, "cell 0 1, span 2, grow");
+        setupTable(productsTable, productsScrollPane);
+        setupTable(transactionsTable, transactionsScrollPane);
 
         productsScrollPane.setVisible(true);
         transactionsScrollPane.setVisible(false);
     }
 
-    private void showGrid(JTable table) {
+    private void setupTable(JTable table, JScrollPane scrollPane) {
         table.setShowGrid(true);
         table.setShowHorizontalLines(true);
         table.setShowVerticalLines(true);
         table.setGridColor(Color.LIGHT_GRAY);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(0xd9d9d9)));
+        this.add(scrollPane, "cell 0 2, span 2, grow");
     }
 
     private void onSelectionPerform(String selected) {
@@ -112,5 +115,9 @@ public class HistoryCard extends ShadowCard {
 
     private void search() {
         System.out.println("Searched " + searchTextField.getText());
+    }
+
+    public void refreshTableData() {
+        displayData();
     }
 }

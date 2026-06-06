@@ -11,7 +11,7 @@ public class DeletePageContents extends JPanel {
     private JLabel titleLabel;
     private DeleteCard deleteCard;
 
-    public DeletePageContents(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
+    public DeletePageContents() {
         this.setLayout(new MigLayout());
         titleLabel = new JLabel("Delete data");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));

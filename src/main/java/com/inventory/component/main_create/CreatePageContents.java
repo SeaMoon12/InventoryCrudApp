@@ -11,7 +11,7 @@ public class CreatePageContents extends JPanel {
     private JLabel titleLabel;
     private CreateCard createCard;
 
-    public CreatePageContents(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
+    public CreatePageContents() {
         this.setLayout(new MigLayout());
         titleLabel = new JLabel("Input new data");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));

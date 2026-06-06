@@ -11,7 +11,7 @@ public class UpdatePageContents extends JPanel {
     private JLabel titleLabel;
     private UpdateCard updateCard;
 
-    public UpdatePageContents(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
+    public UpdatePageContents() {
         this.setLayout(new MigLayout());
         titleLabel = new JLabel("Update Existing Data");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));

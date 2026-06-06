@@ -18,20 +18,20 @@ public class MainPage extends JPanel {
     private UpdatePageContents updatePageContents;
     private DeletePageContents deletePageContents;
 
-    public MainPage(DefaultTableModel productsTableModel, DefaultTableModel transactionsTableModel) {
+    public MainPage() {
         this.setLayout(new MigLayout("fill, insets 0, hidemode 3"));
         this.setBackground(new Color(0xd9d9d9));
 
-        dashboardPageContents = new DashboardPageContents(productsTableModel, transactionsTableModel);
+        dashboardPageContents = new DashboardPageContents();
         this.add(dashboardPageContents, "cell 0 0, grow");
 
-        createPageContents = new CreatePageContents(productsTableModel, transactionsTableModel);
+        createPageContents = new CreatePageContents();
         this.add(createPageContents, "cell 0 0, grow");
 
-        updatePageContents = new UpdatePageContents(productsTableModel, transactionsTableModel);
+        updatePageContents = new UpdatePageContents();
         this.add(updatePageContents, "cell 0 0, grow");
 
-        deletePageContents = new DeletePageContents(productsTableModel, transactionsTableModel);
+        deletePageContents = new DeletePageContents();
         this.add(deletePageContents, "cell 0 0, grow");
 
         hideAllPages();
@@ -74,5 +74,9 @@ public class MainPage extends JPanel {
         createPageContents.setVisible(false);
         updatePageContents.setVisible(false);
         deletePageContents.setVisible(false);
+    }
+
+    public DashboardPageContents getDashboardPageContents() {
+        return dashboardPageContents;
     }
 }

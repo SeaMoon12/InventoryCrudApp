@@ -14,7 +14,7 @@ public class DeleteCard extends ShadowCard {
     private JLabel whatToDelete;
     private String[] options = {"Data", "Transaction"};
     private JComboBox<String> dropdown;
-    private JLabel selectedLabel = new JLabel();
+    //private JLabel selectedLabel = new JLabel();
 
     private JLabel dropdownSelectionLabel;
     private CustomTextField dropdownSelectionText;
@@ -53,7 +53,7 @@ public class DeleteCard extends ShadowCard {
     }
 
     private void onDropdownSelected(String selected) {
-        selectedLabel.setText(selected);
+        //selectedLabel.setText(selected);
         if (selected.equals("Data")) {
             dropdownSelectionLabel.setText("Product ID");
             dropdownSelectionText.setPlaceholder("Enter product ID...");
