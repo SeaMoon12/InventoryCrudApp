@@ -2,6 +2,8 @@ package com.inventory.component.main_create;
 
 import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
+import com.inventory.queries.ProductData;
+import com.inventory.queries.TransactionData;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -10,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CreateCard extends ShadowCard {
+
+    private ProductData pData = new ProductData();
+    private TransactionData tData = new TransactionData();
 
     private JLabel productName;
     private CustomTextField productNameText;
@@ -20,7 +25,7 @@ public class CreateCard extends ShadowCard {
     private JLabel quantity;
     private CustomTextField quantityText;
 
-    private String[] transactionTypes = {"Incoming", "Outoing"};
+    private String[] transactionTypes = {"Incoming", "Outgoing"};
     private JLabel type;
     private JComboBox<String> typeCombo;
 
@@ -82,8 +87,38 @@ public class CreateCard extends ShadowCard {
                 productNameText.getText().isEmpty() ||
                 categoryText.getText().isEmpty() ||
                 quantityText.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter all fields.");
-            return;
+            JOptionPane.showMessageDialog(this, "Please enter all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                insertData(productNameText.getText(), categoryText.getText(), Integer.parseInt(quantityText.getText()), (String) typeCombo.getSelectedItem());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter a number in the Quantity field.",  "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
+
+    private void insertData(String name, String category, int quantity, String type) {
+        int productID;
+        boolean isIncoming;
+
+        if (type.equals("Incoming")) { // set type to boolean
+            isIncoming = true;
+        } else {
+            isIncoming = false;
+        }
+
+        if (pData.getProductIDByName(name) == -1) { // if name doesnt exist: insert new product and get productID
+            pData.insertProduct(name, category, 0);
+            productID = pData.getProductIDByName(name);
+        } else { // if name exists: get productID
+            productID = pData.getProductIDByName(name);
+        }
+
+        // after get productID, insert to transaction
+
+        tData.insertTransaction(productID, quantity, type);
+        pData.updateStock(productID, quantity, isIncoming);
+    }
+
+
 }

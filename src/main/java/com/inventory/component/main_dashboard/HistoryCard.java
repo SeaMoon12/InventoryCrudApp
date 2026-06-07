@@ -43,7 +43,7 @@ public class HistoryCard extends ShadowCard {
         initTables();
         addComponents();
 
-        displayData("Products", searchTextField.getText());
+        displayData("Products");
 
         tableDropdown.addActionListener(new ActionListener() {
 
@@ -58,6 +58,7 @@ public class HistoryCard extends ShadowCard {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                pData.readAndSearchProducts(searchTextField.getText(), productsTableModel);
                 tData.readAndSearchTransactions(searchTextField.getText(), transactionsTableModel);
             }
         });
@@ -76,10 +77,16 @@ public class HistoryCard extends ShadowCard {
     }
 
     private void initTables() {
+        String[] productTableColumns = {"Product ID", "Product Name", "Category", "Stock"};
         String[] transactionTableColumns = {"Transaction ID", "Product Name", "Quantity", "Transaction Type", "Transaction Date"};
 
-        productsTableModel = new  DefaultTableModel();
-        transactionsTableModel = new  DefaultTableModel(null, transactionTableColumns) {
+        productsTableModel = new DefaultTableModel(null, productTableColumns) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        transactionsTableModel = new DefaultTableModel(null, transactionTableColumns) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -99,9 +106,9 @@ public class HistoryCard extends ShadowCard {
         transactionsScrollPane.setVisible(false);
     }
 
-    private void displayData(String dataToDisplay, String keyword) {
+    private void displayData(String dataToDisplay) {
         if (dataToDisplay.equals("Products")) {
-            // display products data in products table
+            pData.readAndSearchProducts(searchTextField.getText(), productsTableModel);
         } else if (dataToDisplay.equals("Transactions")) {
             tData.readAndSearchTransactions(searchTextField.getText(), transactionsTableModel);
         }
@@ -129,17 +136,18 @@ public class HistoryCard extends ShadowCard {
         if (selected.equals("Products")) {
             transactionsScrollPane.setVisible(false);
             productsScrollPane.setVisible(true);
-            displayData("Products", searchTextField.getText());
+            displayData("Products");
         } else if (selected.equals("Transactions")) {
             productsScrollPane.setVisible(false);
             transactionsScrollPane.setVisible(true);
-            displayData("Transactions", searchTextField.getText());
+            displayData("Transactions");
         }
         this.revalidate();
         this.repaint();
     }
 
     public void refreshTableData() {
+        pData.readAndSearchProducts(searchTextField.getText(), productsTableModel);
         tData.readAndSearchTransactions(searchTextField.getText(), transactionsTableModel);
     }
 

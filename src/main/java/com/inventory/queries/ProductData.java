@@ -2,8 +2,10 @@ package com.inventory.queries;
 
 import com.inventory.main.DatabaseConnection;
 
+import javax.swing.table.DefaultTableModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProductData {
@@ -37,6 +39,10 @@ public class ProductData {
             }
         }
         return isSuccess;
+    }
+
+    public void readAndSearchProducts(String keyword, DefaultTableModel model) {
+        System.out.println("Displaying Table...");
     }
 
     // UPDATE
@@ -97,5 +103,29 @@ public class ProductData {
             }
         }
         return isSuccess;
+    }
+
+    // this is my own (simmon)
+    public int getProductIDByName(String productName) {
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        int productID = -1;
+        String query = "SELECT productID FROM product WHERE product_name = ?";
+
+        try {
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, productName);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                productID = rs.getInt("productID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productID;
     }
 }
