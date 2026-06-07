@@ -19,7 +19,6 @@ public class UpdateCard extends ShadowCard {
     private JPanel updateDetailsPanel;
     private JLabel transactionType;
     private JComboBox<String> transactionTypeCombo;
-    private JLabel comboText;
     private JLabel quantity;
     private CustomTextField quantityText;
     private JLabel productName;
