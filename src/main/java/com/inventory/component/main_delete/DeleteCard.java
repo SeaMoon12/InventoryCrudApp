@@ -2,19 +2,25 @@ package com.inventory.component.main_delete;
 
 import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
+import com.inventory.queries.ProductData;
+import com.inventory.queries.TransactionData;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 public class DeleteCard extends ShadowCard {
+
+    private ProductData pData = new ProductData();
+    private TransactionData tData = new TransactionData();
 
     private JLabel whatToDelete;
     private String[] options = {"Data", "Transaction"};
     private JComboBox<String> dropdown;
-    //private JLabel selectedLabel = new JLabel();
 
     private JLabel dropdownSelectionLabel;
     private CustomTextField dropdownSelectionText;
@@ -22,6 +28,27 @@ public class DeleteCard extends ShadowCard {
     private JButton deleteButton;
 
     public DeleteCard() {
+        initComponents();
+        addComponents();
+
+        dropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selected = (String) dropdown.getSelectedItem();
+                onDropdownSelected(selected);
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onButtonClick();
+            }
+        });
+    }
+
+    private void initComponents() {
         this.setLayout(new MigLayout("insets 15"));
         whatToDelete = new JLabel("What to delete?");
         whatToDelete.setFont(new Font("Arial", Font.BOLD, 18));
@@ -33,15 +60,9 @@ public class DeleteCard extends ShadowCard {
         dropdownSelectionText = new CustomTextField(new Color(0xd9d9d9), "Enter product ID...");
 
         deleteButton = new JButton("Delete");
+    }
 
-        dropdown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selected = (String) dropdown.getSelectedItem();
-                onDropdownSelected(selected);
-            }
-        });
-
+    private void addComponents() {
         this.add(whatToDelete, "wrap");
         this.add(dropdown, "wrap");
 
@@ -60,6 +81,32 @@ public class DeleteCard extends ShadowCard {
         } else if (selected.equals("Transaction")) {
             dropdownSelectionLabel.setText("Transaction ID");
             dropdownSelectionText.setPlaceholder("Enter transaction ID...");
+        }
+    }
+
+    private void onButtonClick() {
+        boolean deleteSuccessful;
+
+        if (dropdownSelectionLabel.getText().equals("Product ID")) {
+            try {
+                deleteSuccessful = pData.deleteProduct(Integer.parseInt(dropdownSelectionText.getText()));
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter a number in the Product ID field.",  "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } else {
+            try {
+                deleteSuccessful = tData.deleteTransaction(Integer.parseInt(dropdownSelectionText.getText()));
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter a number in the Transaction ID field.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        if (deleteSuccessful) {
+            JOptionPane.showMessageDialog(this, dropdownSelectionLabel.getText() + " deleted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, dropdownSelectionLabel.getText() + " could not be deleted.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

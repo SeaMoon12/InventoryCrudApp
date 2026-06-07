@@ -98,6 +98,8 @@ public class CreateCard extends ShadowCard {
     }
 
     private void insertData(String name, String category, int quantity, String type) {
+        boolean insertProductSuccessful;
+        boolean insertTransactionSuccessful;
         int productID;
         boolean isIncoming;
 
@@ -108,7 +110,7 @@ public class CreateCard extends ShadowCard {
         }
 
         if (pData.getProductIDByName(name) == -1) { // if name doesnt exist: insert new product and get productID
-            pData.insertProduct(name, category, 0);
+            insertProductSuccessful = pData.insertProduct(name, category, 0);
             productID = pData.getProductIDByName(name);
         } else { // if name exists: get productID
             productID = pData.getProductIDByName(name);
@@ -116,8 +118,16 @@ public class CreateCard extends ShadowCard {
 
         // after get productID, insert to transaction
 
-        tData.insertTransaction(productID, quantity, type);
-        pData.updateStock(productID, quantity, isIncoming);
+        insertTransactionSuccessful = tData.insertTransaction(productID, quantity, type);
+        insertProductSuccessful = pData.updateStock(productID, quantity, isIncoming);
+
+        if (insertProductSuccessful && insertTransactionSuccessful) {
+            JOptionPane.showMessageDialog(this, "Product successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else if (!insertProductSuccessful) {
+            JOptionPane.showMessageDialog(this, "Product not added.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Transaction not added.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 
