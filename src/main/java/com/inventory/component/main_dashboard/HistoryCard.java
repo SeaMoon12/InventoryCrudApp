@@ -70,7 +70,7 @@ public class HistoryCard extends ShadowCard {
         selectedTable = new JLabel(options[0]);
 
         searchLabel = new JLabel("Search: ");
-        searchTextField = new CustomTextField(new Color(0xd9d9d9), "Enter product name/id...");
+        searchTextField = new CustomTextField(new Color(0xd9d9d9), "Enter product name...");
         searchTextField.setPreferredSize(new Dimension(50, getHeight()));
     }
 
