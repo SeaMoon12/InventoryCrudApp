@@ -3,6 +3,8 @@ package com.inventory.component.main_dashboard;
 import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
 import com.inventory.main.DatabaseConnection;
+import com.inventory.queries.ProductData;
+import com.inventory.queries.TransactionData;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -10,12 +12,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class HistoryCard extends ShadowCard {
+
+    private ProductData pData = new ProductData();
+    private TransactionData tData = new TransactionData();
 
     private JLabel cardTitle;
 
@@ -57,7 +58,7 @@ public class HistoryCard extends ShadowCard {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                readAndSearchTransactions(searchTextField.getText());
+                tData.readAndSearchTransactions(searchTextField.getText(), transactionsTableModel);
             }
         });
     }
@@ -102,7 +103,7 @@ public class HistoryCard extends ShadowCard {
         if (dataToDisplay.equals("Products")) {
             // display products data in products table
         } else if (dataToDisplay.equals("Transactions")) {
-            readAndSearchTransactions(keyword);
+            tData.readAndSearchTransactions(searchTextField.getText(), transactionsTableModel);
         }
     }
 
@@ -138,49 +139,8 @@ public class HistoryCard extends ShadowCard {
         this.repaint();
     }
 
-    private void readAndSearchTransactions(String keyword) {
-        Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        transactionsTableModel.setRowCount(0);
-
-        String query = "SELECT t.transaction_id, p.product_name, t.quantity, t.transaction_type, t.transaction_date " +
-                "FROM transaction t " +
-                "INNER JOIN product p ON t.productID = p.productID " +
-                "WHERE p.product_name LIKE ?";
-
-        try {
-            pstmt = conn.prepareStatement(query);
-
-            pstmt.setString(1, "%" + keyword + "%");
-
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                int id = rs.getInt("transaction_id");
-                String name = rs.getString("product_name");
-                int qty = rs.getInt("quantity");
-                String type = rs.getString("transaction_type");
-                String date = rs.getString("transaction_date");
-
-                transactionsTableModel.addRow(new Object[]{id, name, qty, type, date});
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void refreshTableData() {
-        readAndSearchTransactions(searchTextField.getText());
+        tData.readAndSearchTransactions(searchTextField.getText(), transactionsTableModel);
     }
 
 }
