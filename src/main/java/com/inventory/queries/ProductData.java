@@ -105,7 +105,34 @@ public class ProductData {
         return isSuccess;
     }
 
-    // this is my own (simmon)
+    // ===== this is my own (simmon) =====
+    public Product getProductByID(int productID) {
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        String query = "SELECT * FROM product WHERE productID = ?";
+
+        try {
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, productID);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new Product(
+                        rs.getInt("productID"),
+                        rs.getString("product_name"),
+                        rs.getString("category"),
+                        rs.getInt("stock")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public int getProductIDByName(String productName) {
         Connection conn = DatabaseConnection.getConnection();
         PreparedStatement pstmt = null;
@@ -127,5 +154,64 @@ public class ProductData {
             e.printStackTrace();
         }
         return productID;
+    }
+
+    public int getCurrentStock(int productID) {
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        int currentStock = -1;
+        String query = "SELECT stock FROM product WHERE productID = ?";
+
+        try {
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, productID);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                currentStock = rs.getInt("stock");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return currentStock;
+    }
+
+    // for typos for new products. for example iPhone 20 is a new product i wanna add but i did a typo
+    public boolean updateProductDetails(int productID, String newName, String newCategory) {
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement pstmt = null;
+        boolean isSuccess = false;
+
+        String query = "UPDATE product SET product_name = ?, category = ? WHERE productID = ?";
+
+        try {
+            pstmt = conn.prepareStatement(query);
+
+            pstmt.setString(1, newName);
+            pstmt.setString(2, newCategory);
+            pstmt.setInt(3, productID);
+
+            int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                isSuccess = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isSuccess;
+    }
+
+    // for typos for existing products. for example iPhone 15 is already in stock, but when i wanted to
+    // add a new transaction to increase/decrease the stock, i did a typo
+    public boolean mergeProductStock(int targetProductID, int sourceProductID) {
+        int stockToMove = getCurrentStock(sourceProductID);
+
+        if (stockToMove <= 0) {
+            return true;
+        }
+        return updateStock(targetProductID, stockToMove, true);
     }
 }

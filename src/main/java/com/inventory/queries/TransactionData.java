@@ -84,19 +84,18 @@ public class TransactionData {
     }
 
     // UPDATE
-    public boolean updateTransaction(int transactionId, int productId, int newQuantity, String newType) {
+    public boolean updateTransaction(int transactionId, int newQuantity, String newType) {
         Connection conn = DatabaseConnection.getConnection();
         PreparedStatement pstmt = null;
         boolean isSuccess = false;
 
-        String query = "UPDATE transaction SET productID = ?, quantity = ?, transaction_type = ? WHERE transaction_id = ?";
+        String query = "UPDATE transaction SET quantity = ?, transaction_type = ? WHERE transaction_id = ?";
 
         try {
             pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, productId);
-            pstmt.setInt(2, newQuantity);
-            pstmt.setString(3, newType);
-            pstmt.setInt(4, transactionId);
+            pstmt.setInt(1, newQuantity);
+            pstmt.setString(2, newType);
+            pstmt.setInt(3, transactionId);
 
             int rowsUpdated = pstmt.executeUpdate();
             if (rowsUpdated > 0) {
@@ -142,5 +141,73 @@ public class TransactionData {
             }
         }
         return isSuccess;
+    }
+
+    // ===== this is my own (simmon) =====
+    public Transaction getTransactionByID(int transactionID) {
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        String query = "SELECT * FROM transaction WHERE transaction_id = ?";
+
+        try {
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, transactionID);
+
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new Transaction(
+                        rs.getInt("transaction_id"),
+                        rs.getInt("productID"),
+                        rs.getInt("quantity"),
+                        rs.getString("transaction_type"),
+                        rs.getString("transaction_date")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // after merging a typo product that already exists
+    public boolean changeTransactionProductID(int targetProductID, int sourceProductID) {
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement pstmt = null;
+
+        String query = "UPDATE transaction SET productID = ? WHERE productID = ?";
+
+        try {
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, targetProductID);
+            pstmt.setInt(2, sourceProductID);
+
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public int getTransactionIDByProductID(int productID) {
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        String query = "SELECT transaction_id FROM transaction WHERE productID = ?";
+
+        try {
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, productID);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("transaction_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

@@ -49,14 +49,14 @@ public class DeleteCard extends ShadowCard {
     }
 
     private void initComponents() {
-        this.setLayout(new MigLayout("insets 15"));
+        this.setLayout(new MigLayout("insets 25"));
         whatToDelete = new JLabel("What to delete?");
         whatToDelete.setFont(new Font("Arial", Font.BOLD, 18));
         dropdown = new JComboBox<>(options);
         dropdown.setFont(new Font("Arial", Font.BOLD, 14));
 
         dropdownSelectionLabel = new JLabel("Product ID");
-        dropdownSelectionLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        dropdownSelectionLabel.setFont(new Font("Arial", Font.BOLD, 18));
         dropdownSelectionText = new CustomTextField(new Color(0xd9d9d9), "Enter product ID...");
 
         deleteButton = new JButton("Delete");
