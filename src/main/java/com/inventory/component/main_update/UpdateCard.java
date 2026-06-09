@@ -205,16 +205,30 @@ public class UpdateCard extends ShadowCard {
     }
 
     private void autoFillFieldsByProductID() {
-        String productName = pData.getProductByID(Integer.parseInt(productIDTextField.getText())).getName();
-        String productCategory = pData.getProductByID(Integer.parseInt(productIDTextField.getText())).getCategory();
+        Product product = pData.getProductByID(Integer.parseInt(productIDTextField.getText()));
+
+        if (product == null) {
+            JOptionPane.showMessageDialog(this, "Product does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String productName = product.getName();
+        String productCategory = product.getCategory();
 
         productNameTextField.setText(productName);
         productCategoryTextField.setText(productCategory);
     }
 
     private void autoFillFieldsByTransactionID() {
-        int quantity = tData.getTransactionByID(Integer.parseInt(transactionIDTextField.getText())).getQuantity();
-        String type = tData.getTransactionByID(Integer.parseInt(transactionIDTextField.getText())).getTransactionType();
+        Transaction transaction = tData.getTransactionByID(Integer.parseInt(transactionIDTextField.getText()));
+
+        if (transaction == null) {
+            JOptionPane.showMessageDialog(null, "Transaction does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int quantity = transaction.getQuantity();
+        String type = transaction.getTransactionType();
 
         transactionQuantityTextField.setText(String.valueOf(quantity));
         if (type.equals("Incoming")) {
@@ -238,7 +252,14 @@ public class UpdateCard extends ShadowCard {
                 nameExists = false;
             }
 
-            int typoProductStock = pData.getProductByID(Integer.parseInt(productIDTextField.getText())).getStock();
+            Product product = pData.getProductByID(Integer.parseInt(productIDTextField.getText()));
+
+            if (product == null) {
+                JOptionPane.showMessageDialog(this, "Product does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int typoProductStock = product.getStock();
             String type = tData.getTransactionByID(tData.getTransactionIDByProductID(Integer.parseInt(productIDTextField.getText()))).getTransactionType();
 
             boolean isIncoming = type.equals("Incoming");
@@ -257,6 +278,8 @@ public class UpdateCard extends ShadowCard {
 
             if (isSuccessful) {
                 JOptionPane.showMessageDialog(null, "Product Updated Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Product couldn't be updated.", "Failed", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (NumberFormatException e) {
@@ -265,11 +288,19 @@ public class UpdateCard extends ShadowCard {
     }
 
     private void handleTransactionUpdate() {
+        boolean isSwitchAndIncoming = false;
+        boolean isSwitch = false;
         boolean isQuantityPositive;
         int quantityChange;
 
         try {
             Transaction oldTransaction = tData.getTransactionByID(Integer.parseInt(transactionIDTextField.getText()));
+
+            if (oldTransaction == null) {
+                JOptionPane.showMessageDialog(null, "Transaction does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             int oldQuantity = oldTransaction.getQuantity();
             String oldType = oldTransaction.getTransactionType();
             int newQuantity = Integer.parseInt(transactionQuantityTextField.getText());
@@ -283,18 +314,25 @@ public class UpdateCard extends ShadowCard {
             } else if (oldType.equals("Outgoing") && newType.equals("Outgoing")) {
                 quantityChange = oldQuantity - newQuantity;
             } else {
+                isSwitch = true;
                 quantityChange = oldQuantity + newQuantity;
-                pData.updateStock(productID, quantityChange, !oldType.equals("Incoming") || !newType.equals("Outgoing"));
+                isSwitchAndIncoming = oldType.equals("Outgoing") && newType.equals("Incoming");
             }
 
             isQuantityPositive = quantityChange > 0;
 
-            if (!isQuantityPositive && productStock < Math.abs(quantityChange)) {
+            boolean isNegativeAftSubtHomogenous = !isQuantityPositive && productStock < Math.abs(quantityChange) && !isSwitch; // Inc -> Inc or Outg -> Outg
+            boolean isNegativeAftSubtHeterogenous = isSwitch && !isSwitchAndIncoming && productStock < Math.abs(quantityChange); // Inc -> Outg or Outg -> Inc
+            if (isNegativeAftSubtHomogenous || isNegativeAftSubtHeterogenous) {
                 JOptionPane.showMessageDialog(UpdateCard.this, "Current stock is too small!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            pData.updateStock(productID, Math.abs(quantityChange), isQuantityPositive);
+            if (!isSwitch) {
+                pData.updateStock(productID, Math.abs(quantityChange), isQuantityPositive);
+            } else {
+                pData.updateStock(productID, quantityChange, isSwitchAndIncoming);
+            }
             boolean updateSuccess = tData.updateTransaction(oldTransaction.getTransactionID(), newQuantity, newType);
 
             if (updateSuccess) {

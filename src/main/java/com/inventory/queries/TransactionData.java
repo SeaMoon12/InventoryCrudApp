@@ -210,4 +210,32 @@ public class TransactionData {
         }
         return -1;
     }
+
+    public boolean deleteAllTransactionsByProductID(int productID) {
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement pstmt = null;
+        boolean isSuccess = false;
+
+        String query = "DELETE FROM transaction WHERE productID = ?";
+
+        try {
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, productID);
+
+            int rowsDeleted = pstmt.executeUpdate();
+            if (rowsDeleted > 0) {
+                isSuccess = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isSuccess;
+    }
 }

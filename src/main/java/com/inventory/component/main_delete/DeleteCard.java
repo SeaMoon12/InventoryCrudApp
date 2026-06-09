@@ -2,7 +2,9 @@ package com.inventory.component.main_delete;
 
 import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
+import com.inventory.queries.Product;
 import com.inventory.queries.ProductData;
+import com.inventory.queries.Transaction;
 import com.inventory.queries.TransactionData;
 import net.miginfocom.swing.MigLayout;
 
@@ -89,13 +91,42 @@ public class DeleteCard extends ShadowCard {
 
         if (dropdownSelectionLabel.getText().equals("Product ID")) {
             try {
+                Product product = pData.getProductByID(Integer.parseInt(dropdownSelectionText.getText()));
+
+                if (product == null) {
+                    JOptionPane.showMessageDialog(this, "Product ID does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 deleteSuccessful = pData.deleteProduct(Integer.parseInt(dropdownSelectionText.getText()));
+                if (!deleteSuccessful) {
+                    tData.deleteAllTransactionsByProductID(product.getProductID());
+                    deleteSuccessful = pData.deleteProduct(Integer.parseInt(dropdownSelectionText.getText()));
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Please enter a number in the Product ID field.",  "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         } else {
             try {
+                Transaction transaction = tData.getTransactionByID(Integer.parseInt(dropdownSelectionText.getText()));
+                Product product = pData.getProductByID(transaction.getProductID());
+
+                if (transaction == null) {
+                    JOptionPane.showMessageDialog(this, "Transaction ID does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                int quantityDeleted = transaction.getQuantity();
+                String transactiontype = transaction.getTransactionType();
+                boolean isIncoming = transactiontype.equals("Incoming");
+
+                if (product.getStock() < quantityDeleted && isIncoming) {
+                    JOptionPane.showMessageDialog(null, "Stock not enough to delete incoming transaction of this size!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                pData.updateStock(transaction.getProductID(), quantityDeleted, !isIncoming);
+
                 deleteSuccessful = tData.deleteTransaction(Integer.parseInt(dropdownSelectionText.getText()));
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Please enter a number in the Transaction ID field.", "Error", JOptionPane.ERROR_MESSAGE);
