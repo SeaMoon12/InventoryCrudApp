@@ -78,6 +78,8 @@ public class SidePanel extends JPanel {
             @Override
             public void onButtonClick(SidePanelButton button) {
                 performActionOnClick(button.getButtonName().trim());
+                button.deselect();
+                dashboard.performMousePressed();
             }
         });
     }
