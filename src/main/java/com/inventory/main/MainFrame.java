@@ -3,6 +3,7 @@ package com.inventory.main;
 import com.inventory.component.login.LoginButtonListener;
 import com.inventory.pages.DashboardPage;
 import com.inventory.pages.LoginPage;
+import com.inventory.pages.LogoutButtonListener;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class MainFrame extends javax.swing.JFrame {
         setup();
 
         this.add(loginPage, "grow");
-        this.add(dashboardPage, "pos 0 0 100% 100%");
+        this.add(dashboardPage, "grow");
 
         // set Initial visibility
         this.loginPage.setVisible(true);
@@ -27,13 +28,29 @@ public class MainFrame extends javax.swing.JFrame {
         loginPage.setLoginButtonListener(new LoginButtonListener() {
             @Override
             public void onLoginButtonClick(String username, String password) {
-                if (username.equals("admin") && password.equals("1234")) {
+                boolean databaseConnected = DatabaseConnection.getConnection() != null;
+                if (username.equals("admin") && password.equals("1234") && databaseConnected) {
                     // Hide login page and show dashboard page
                     loginPage.setVisible(false);
                     dashboardPage.setVisible(true);
+                    dashboardPage.getMainPagePanel().getDashboardPageContents().getStockHistory().refreshTableData();
+                    loginPage.getLoginComponents().getloginCard().clearFields();
                 } else {
-                    JOptionPane.showMessageDialog(MainFrame.this, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                    if (!databaseConnected) {
+                        JOptionPane.showMessageDialog(null, "You are not connected to the database!", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(MainFrame.this, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
+            }
+        });
+
+        dashboardPage.setLogoutButtonListener(new LogoutButtonListener() {
+
+            @Override
+            public void onLogout() {
+                dashboardPage.setVisible(false);
+                loginPage.setVisible(true);
             }
         });
     }

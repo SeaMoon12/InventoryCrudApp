@@ -44,5 +44,9 @@ public class LoginPage extends javax.swing.JPanel {
         g2D.setPaint(colorGrad);
         g2D.fillRect(0, 0, getWidth(), getHeight());
     }
+
+    public LoginComponents getLoginComponents() {
+        return loginComponents;
+    }
 }
 

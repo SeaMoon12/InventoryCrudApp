@@ -75,4 +75,9 @@ public class LoginCard extends JPanel implements ActionListener {
         g2D.setColor(new Color(0xd9d9d9));
         g2D.fillRoundRect(0, 0, width, height, 10, 10);
     }
+
+    public void clearFields() {
+        usernameField.setText("");
+        passwordField.setText("");
+    }
 }

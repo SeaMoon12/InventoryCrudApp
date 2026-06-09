@@ -65,7 +65,6 @@ public class MainPage extends JPanel {
                     deletePageContents.setVisible(true);
                 }
             }
-            case "Logout" -> System.out.println("Logout Button Clicked");
         }
     }
 

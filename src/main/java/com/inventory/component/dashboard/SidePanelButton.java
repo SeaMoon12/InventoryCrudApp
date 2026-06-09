@@ -32,6 +32,16 @@ public class SidePanelButton extends JPanel {
             public void mousePressed(MouseEvent e) {
                 performMousePressed();
             }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
         });
     }
 

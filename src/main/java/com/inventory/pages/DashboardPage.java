@@ -9,8 +9,9 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DashboardPage extends javax.swing.JPanel implements ActionListener {
+public class DashboardPage extends javax.swing.JPanel {
 
+    private LogoutButtonListener logoutButtonListener;
     private SidePanel sidePanel;
     private Header header;
     private MainPage mainPage;
@@ -38,14 +39,20 @@ public class DashboardPage extends javax.swing.JPanel implements ActionListener 
                 if (pageName.equals("Dashboard")) {
                     // refresh table, because user cannot see table until user clicks the dashboard Sidebar button
                     mainPage.getDashboardPageContents().getStockHistory().refreshTableData();
+                } else if (pageName.equals("Logout")) {
+                    logoutButtonListener.onLogout();
+                    return;
                 }
                 mainPage.showPage(pageName);
             }
         });
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    public MainPage getMainPagePanel() {
+        return this.mainPage;
+    }
 
+    public void setLogoutButtonListener(LogoutButtonListener logoutButtonListener) {
+        this.logoutButtonListener = logoutButtonListener;
     }
 }

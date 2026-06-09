@@ -41,4 +41,8 @@ public class LoginComponents extends JPanel {
     public void setLoginButtonListener(LoginButtonListener loginButtonListener) {
         this.loginButtonListener = loginButtonListener;
     }
+
+    public LoginCard getloginCard() {
+        return loginCard;
+    }
 }
