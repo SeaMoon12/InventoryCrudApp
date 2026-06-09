@@ -259,18 +259,44 @@ public class UpdateCard extends ShadowCard {
                 return;
             }
 
+            int transactionIDOfTypo = tData.getTransactionIDByProductID(product.getProductID());
+            Transaction transaction = tData.getTransactionByID(transactionIDOfTypo);
+
             int typoProductStock = product.getStock();
-            String type = tData.getTransactionByID(tData.getTransactionIDByProductID(Integer.parseInt(productIDTextField.getText()))).getTransactionType();
+            String type;
+            if (transactionIDOfTypo != -1) {
+                type = transaction.getTransactionType();
+            } else {
+                type = "Incoming";
+            }
 
             boolean isIncoming = type.equals("Incoming");
 
             if (nameExists) {
                 // updated name exists (it is a typo): add/subt existing product stock with the typo one based on typo's type then delete typo product
+                Product existingProduct = pData.getProductByID(existingProductID);
+                String existingCategory = productCategoryTextField.getText();;
+                if (existingProduct != null) {
+                    existingCategory = existingProduct.getCategory();
+                    productCategoryTextField.setText(existingCategory);
+                }
+
+                boolean oldTransactionDeleted;
+                boolean transactionInserted;
                 boolean stockMoved = pData.updateStock(existingProductID, typoProductStock, isIncoming);
-                boolean transactionInserted = tData.insertTransaction(existingProductID, typoProductStock, type);
-                boolean oldTransactionDeleted = tData.deleteTransaction(tData.getTransactionIDByProductID(Integer.parseInt(productIDTextField.getText())));
+
+                // if transaction exists, delete the transaction
+                if (transactionIDOfTypo != -1) {
+                    transactionInserted = tData.insertTransaction(existingProductID, typoProductStock, type);
+                    oldTransactionDeleted = tData.deleteTransaction(transactionIDOfTypo);
+                } else {
+                    transactionInserted = true;
+                    oldTransactionDeleted = true;
+                }
+
+                boolean existingDetailsUpdate = pData.updateProductDetails(existingProductID, newName, existingCategory);
                 boolean productDeleted = pData.deleteProduct(Integer.parseInt(productIDTextField.getText()));
-                isSuccessful = stockMoved && productDeleted && transactionInserted && oldTransactionDeleted;
+                isSuccessful = stockMoved && productDeleted && transactionInserted && oldTransactionDeleted && existingDetailsUpdate;
             } else {
                 // Name is not a typo: just update normally
                 isSuccessful = pData.updateProductDetails(Integer.parseInt(productIDTextField.getText()), newName, productCategoryTextField.getText());
@@ -278,6 +304,7 @@ public class UpdateCard extends ShadowCard {
 
             if (isSuccessful) {
                 JOptionPane.showMessageDialog(null, "Product Updated Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                clearFields();
             } else {
                 JOptionPane.showMessageDialog(null, "Product couldn't be updated.", "Failed", JOptionPane.ERROR_MESSAGE);
             }
@@ -337,6 +364,7 @@ public class UpdateCard extends ShadowCard {
 
             if (updateSuccess) {
                 JOptionPane.showMessageDialog(null, "Transaction updated successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                clearFields();
             } else {
                 JOptionPane.showMessageDialog(null, "Transaction update failed!", "Information", JOptionPane.ERROR_MESSAGE);
             }
@@ -344,5 +372,16 @@ public class UpdateCard extends ShadowCard {
             JOptionPane.showMessageDialog(null, "Please enter an integer for integer fields!");
             e.printStackTrace();
         }
+    }
+
+    private void clearFields() {
+        productIDTextField.setText("");
+        productNameTextField.setText("");
+        productCategoryTextField.setText("");
+
+        transactionIDTextField.setText("");
+        transactionQuantityTextField.setText("");
+
+        transactionTypeCombo.setSelectedIndex(0); // reset combo box
     }
 }

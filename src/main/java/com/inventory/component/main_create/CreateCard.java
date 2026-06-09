@@ -2,6 +2,7 @@ package com.inventory.component.main_create;
 
 import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
+import com.inventory.queries.Product;
 import com.inventory.queries.ProductData;
 import com.inventory.queries.TransactionData;
 import net.miginfocom.swing.MigLayout;
@@ -118,6 +119,11 @@ public class CreateCard extends ShadowCard {
             productID = pData.getProductIDByName(name);
         } else { // if name exists: get productID
             productID = pData.getProductIDByName(name);
+
+            Product existingProduct = pData.getProductByID(productID);
+            String existingCategory = existingProduct.getCategory();
+            categoryText.setText(existingCategory);
+
             if (pData.getCurrentStock(productID) < quantity && type.equals("Outgoing")) {
                 JOptionPane.showMessageDialog(this, "Outgoing quantity must be less than or equal to current stock!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -131,6 +137,7 @@ public class CreateCard extends ShadowCard {
 
         if (insertProductSuccessful && insertTransactionSuccessful) {
             JOptionPane.showMessageDialog(this, "Product successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            clearFields();
         } else if (!insertProductSuccessful) {
             JOptionPane.showMessageDialog(this, "Product not added.", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
@@ -138,5 +145,10 @@ public class CreateCard extends ShadowCard {
         }
     }
 
-
+    private void clearFields() {
+        productNameText.setText("");
+        categoryText.setText("");
+        quantityText.setText("");
+        typeCombo.setSelectedIndex(0);
+    }
 }

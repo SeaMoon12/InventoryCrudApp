@@ -98,11 +98,9 @@ public class DeleteCard extends ShadowCard {
                     return;
                 }
 
+                tData.deleteAllTransactionsByProductID(product.getProductID());
                 deleteSuccessful = pData.deleteProduct(Integer.parseInt(dropdownSelectionText.getText()));
-                if (!deleteSuccessful) {
-                    tData.deleteAllTransactionsByProductID(product.getProductID());
-                    deleteSuccessful = pData.deleteProduct(Integer.parseInt(dropdownSelectionText.getText()));
-                }
+
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Please enter a number in the Product ID field.",  "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -110,12 +108,13 @@ public class DeleteCard extends ShadowCard {
         } else {
             try {
                 Transaction transaction = tData.getTransactionByID(Integer.parseInt(dropdownSelectionText.getText()));
-                Product product = pData.getProductByID(transaction.getProductID());
 
                 if (transaction == null) {
                     JOptionPane.showMessageDialog(this, "Transaction ID does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+
+                Product product = pData.getProductByID(transaction.getProductID());
 
                 int quantityDeleted = transaction.getQuantity();
                 String transactiontype = transaction.getTransactionType();
@@ -136,8 +135,13 @@ public class DeleteCard extends ShadowCard {
 
         if (deleteSuccessful) {
             JOptionPane.showMessageDialog(this, dropdownSelectionLabel.getText() + " deleted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            clearFields();
         } else {
             JOptionPane.showMessageDialog(this, dropdownSelectionLabel.getText() + " could not be deleted.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void clearFields() {
+        dropdownSelectionText.setText("");
     }
 }
