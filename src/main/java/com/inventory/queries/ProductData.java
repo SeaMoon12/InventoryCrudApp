@@ -42,7 +42,48 @@ public class ProductData {
     }
 
     public void readAndSearchProducts(String keyword, DefaultTableModel model) {
-        System.out.println("Displaying Table...");
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        model.setRowCount(0);
+
+        String query = "SELECT productID, product_name, category, stock FROM product WHERE productID = ? OR product_name LIKE ?";
+
+        try {
+            pstmt = conn.prepareStatement(query);
+
+            int searchId = 0;
+            try {
+                searchId = Integer.parseInt(keyword);
+            } catch (NumberFormatException e) {
+                // Input is text, keep searchId as 0
+            }
+
+            pstmt.setInt(1, searchId);
+            pstmt.setString(2, "%" + keyword + "%");
+
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("productID");
+                String name = rs.getString("product_name");
+                String cat = rs.getString("category");
+                int stockNum = rs.getInt("stock");
+
+                model.addRow(new Object[]{id, name, cat, stockNum});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // UPDATE
