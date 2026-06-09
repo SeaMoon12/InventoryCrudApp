@@ -1,5 +1,7 @@
 package com.inventory.component.login;
 
+import com.inventory.component.CustomButton;
+import com.inventory.component.CustomTextField;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -11,8 +13,8 @@ public class LoginCard extends JPanel implements ActionListener {
 
     private ActionListener actionListener;
 
-    private JButton loginButton;
-    private LoginTextField usernameField;
+    private CustomButton loginButton;
+    private CustomTextField usernameField;
     private LoginPasswordField passwordField;
 
     public LoginCard() {
@@ -22,13 +24,15 @@ public class LoginCard extends JPanel implements ActionListener {
         JLabel usernameLabel = new JLabel("Username");
         JLabel passwordLabel = new JLabel("Password");
 
-        usernameField = new LoginTextField();
+        usernameField = new CustomTextField(Color.WHITE);
         usernameField.setPreferredSize(new Dimension(200, 30));
+        usernameField.setPlaceholder("Enter username...");
 
         passwordField = new LoginPasswordField();
         passwordField.setPreferredSize(new Dimension(200, 30));
+        passwordField.setPlaceholder("Enter password...");
 
-        loginButton = new JButton("Login");
+        loginButton = new CustomButton("Login");
         loginButton.addActionListener(this);
 
         // Add components to panel

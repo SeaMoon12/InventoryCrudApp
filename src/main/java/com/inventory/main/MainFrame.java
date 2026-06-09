@@ -6,6 +6,7 @@ import com.inventory.pages.LoginPage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class MainFrame extends javax.swing.JFrame {
@@ -42,5 +43,7 @@ public class MainFrame extends javax.swing.JFrame {
         this.setSize(1120, 630);
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(new MigLayout("fill, hidemode 3, insets 0"));
+        this.setLocationRelativeTo(null);
+        this.setMinimumSize(new Dimension(1120, 630));
     }
 }

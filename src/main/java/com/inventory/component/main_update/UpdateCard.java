@@ -1,5 +1,6 @@
 package com.inventory.component.main_update;
 
+import com.inventory.component.CustomButton;
 import com.inventory.component.CustomTextField;
 import com.inventory.component.RoundedPanel;
 import com.inventory.component.dashboard.ShadowCard;
@@ -42,7 +43,7 @@ public class UpdateCard extends ShadowCard {
     private JLabel transactionTypeLabel;
     private JComboBox<String> transactionTypeCombo;
 
-    private JButton updateButton;
+    private CustomButton updateButton;
 
     public UpdateCard() {
         this.setLayout(new MigLayout("fill, insets 25, hidemode 3"));
@@ -157,7 +158,7 @@ public class UpdateCard extends ShadowCard {
         this.add(productsPanel, "width 100%, height 100%, wrap");
         this.add(transactionsPanel, "width 100%, height 100%, wrap");
 
-        updateButton = new JButton("Update");
+        updateButton = new CustomButton("Update");
         this.add(updateButton, "align right");
     }
 

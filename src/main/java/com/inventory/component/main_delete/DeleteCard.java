@@ -1,5 +1,6 @@
 package com.inventory.component.main_delete;
 
+import com.inventory.component.CustomButton;
 import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
 import com.inventory.queries.Product;
@@ -27,7 +28,7 @@ public class DeleteCard extends ShadowCard {
     private JLabel dropdownSelectionLabel;
     private CustomTextField dropdownSelectionText;
 
-    private JButton deleteButton;
+    private CustomButton deleteButton;
 
     public DeleteCard() {
         initComponents();
@@ -61,7 +62,7 @@ public class DeleteCard extends ShadowCard {
         dropdownSelectionLabel.setFont(new Font("Arial", Font.BOLD, 18));
         dropdownSelectionText = new CustomTextField(new Color(0xd9d9d9), "Enter product ID...");
 
-        deleteButton = new JButton("Delete");
+        deleteButton = new CustomButton("Delete");
     }
 
     private void addComponents() {

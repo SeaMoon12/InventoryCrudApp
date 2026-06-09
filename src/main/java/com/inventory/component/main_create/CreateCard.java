@@ -1,5 +1,6 @@
 package com.inventory.component.main_create;
 
+import com.inventory.component.CustomButton;
 import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
 import com.inventory.queries.Product;
@@ -30,7 +31,7 @@ public class CreateCard extends ShadowCard {
     private JLabel type;
     private JComboBox<String> typeCombo;
 
-    private JButton createButton;
+    private CustomButton createButton;
 
     public CreateCard() {
         this.setLayout(new MigLayout("insets 25"));
@@ -55,7 +56,7 @@ public class CreateCard extends ShadowCard {
         type.setFont(new Font("Arial", Font.BOLD, 18));
         typeCombo = new JComboBox<String>(transactionTypes);
 
-        createButton = new JButton("Add Data");
+        createButton = new CustomButton("Add Data");
 
         createButton.addActionListener(new ActionListener() {
 

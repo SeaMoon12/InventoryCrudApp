@@ -37,7 +37,7 @@ public class HistoryCard extends ShadowCard {
     private JScrollPane transactionsScrollPane;
 
     public HistoryCard() {
-        this.setLayout(new MigLayout("fill, insets 20, hidemode 3"));
+        this.setLayout(new MigLayout("fill, insets 20, hidemode 3", "", "[][grow]"));
 
         initComponents();
         initTables();
@@ -119,8 +119,8 @@ public class HistoryCard extends ShadowCard {
         this.add(tableDropdown);
         this.add(searchLabel, "split 2, align right");
         this.add(searchTextField, "wrap, align right, grow");
-        this.add(productsScrollPane, "cell 0 2, span 2, grow");
-        this.add(transactionsScrollPane, "cell 0 2, span 2, grow");
+        this.add(productsScrollPane, "cell 0 1, span 2, grow");
+        this.add(transactionsScrollPane, "cell 0 1, span 2, grow");
     }
 
     private void setupTable(JTable table, JScrollPane scrollPane) {
