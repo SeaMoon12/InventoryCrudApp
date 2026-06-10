@@ -61,6 +61,6 @@ public class MainFrame extends javax.swing.JFrame {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(new MigLayout("fill, hidemode 3, insets 0"));
         this.setLocationRelativeTo(null);
-        this.setMinimumSize(new Dimension(1120, 630));
+        this.setMinimumSize(new Dimension(1280, 720));
     }
 }

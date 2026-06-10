@@ -1,6 +1,8 @@
 package com.inventory.component.main_dashboard;
 
 import com.inventory.component.dashboard.ShadowCard;
+import com.inventory.queries.Dashboard;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,11 +13,17 @@ public class StocksCard extends ShadowCard {
 
     public StocksCard() {
         super();
+        this.setLayout(new MigLayout("insets 25, ax center, ay center"));
 
         totalStock = new JLabel();
-        totalStock.setText("27+");
-        totalStock.setForeground(Color.DARK_GRAY);
+        totalStock.setText("Total items in stock:" + String.valueOf(new Dashboard().getTotalStock()));
+        totalStock.setFont(new Font("Arial", Font.BOLD, 18));
+        totalStock.setForeground(new Color(0xff66c4));
 
         this.add(totalStock);
+    }
+
+    public void refreshTotalStocks() {
+        totalStock.setText(String.valueOf(new Dashboard().getTotalStock()));
     }
 }

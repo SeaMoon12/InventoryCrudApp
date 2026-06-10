@@ -3,31 +3,30 @@ package com.inventory.component.main_dashboard;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
 public class DashboardPageContents extends JPanel {
 
     private StocksCard stock;
-    private Card2 card2;
-    private Card3 card3;
+    private AmountOfProductsCard amountOfProductsCard;
+    private AmountOFLowStockCard amountOFLowStockCard;
     private HistoryCard stockHistory;
-    private Card5 card5;
+    private AmountOfOutOfStockCard amountOfOutOfStockCard;
 
     public DashboardPageContents() {
         this.setLayout(new MigLayout("fill, gap 8", "[grow, fill] [grow, fill] [30%!, fill]", "[30%!, fill] [grow, fill]"));
 
         stock = new StocksCard();
-        card2 = new Card2();
-        card3 = new Card3();
+        amountOfProductsCard = new AmountOfProductsCard();
+        amountOFLowStockCard = new AmountOFLowStockCard();
         stockHistory = new HistoryCard();
-        card5 = new Card5();
+        amountOfOutOfStockCard = new AmountOfOutOfStockCard();
 
         this.add(Box.createVerticalStrut(1), "cell 0 3");
         this.add(stock, "cell 0 0, grow");
-        this.add(card2, "cell 1 0, grow");
-        this.add(card3, "cell 2 0 1 2, grow");
+        this.add(amountOfProductsCard, "cell 1 0, grow");
+        this.add(amountOFLowStockCard, "cell 2 0 1 2, grow");
         this.add(stockHistory, "cell 0 1 2 3, grow");
-        this.add(card5, "cell 2 2 1 2, grow");
+        this.add(amountOfOutOfStockCard, "cell 2 2 1 2, grow");
     }
 
     public HistoryCard getStockHistory() {
