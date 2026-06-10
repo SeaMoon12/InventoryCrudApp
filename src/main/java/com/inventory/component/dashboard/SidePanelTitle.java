@@ -13,16 +13,19 @@ public class SidePanelTitle extends JPanel {
     private JLabel titleLabel = new JLabel();
 
     public SidePanelTitle() {
-        this.setLayout(new MigLayout());
+        this.setLayout(new MigLayout("insets 0, ay center", "[shrink] [shrink]", "[shrink]"));
         this.setPreferredSize(new Dimension(200, 50));
         this.setOpaque(false);
 
         logo = new ImageIcon("src/main/resources/images/logo.png");
+        Image rescaledImage = logo.getImage().getScaledInstance(55, 55, Image.SCALE_SMOOTH);
+        logo.setImage(rescaledImage);
         titleLogo.setIcon(logo);
 
-        titleLabel.setText("IMS");
+        titleLabel.setText("Gadget Logistics Warehouse");
+        titleLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        this.add(titleLogo);
+        this.add(titleLogo, "gapx 5%");
         this.add(titleLabel);
     }
 }

@@ -9,18 +9,25 @@ import java.awt.event.ActionListener;
 
 public class LoginComponents extends JPanel {
 
+    private final int LOGO_IMAGE_WIDTH = 1594;
+    private final int LOGO_IMAGE_HEIGHT = 1567;
+    private final double LOGO_IMAGE_SCALE = 0.15;
+
     private LoginButtonListener loginButtonListener;
 
-    private JLabel title = new JLabel("App Name");
+    private ImageIcon logoLogin = new ImageIcon("src/main/resources/images/logo_login.png");
+    private JLabel logoLabel = new JLabel();
+
     private LoginCard loginCard = new LoginCard();
 
     public LoginComponents() {
         this.setLayout(new MigLayout("fillx, insets 0"));
         this.setOpaque(false);
 
-        title.setFont(new Font("Arial", Font.BOLD, 56));
+        Image scaledIcon = logoLogin.getImage().getScaledInstance((int) (LOGO_IMAGE_WIDTH * LOGO_IMAGE_SCALE), (int) (LOGO_IMAGE_HEIGHT * LOGO_IMAGE_SCALE), Image.SCALE_SMOOTH);
+        logoLabel.setIcon(new ImageIcon(scaledIcon));
 
-        this.add(title, "align center, wrap");
+        this.add(logoLabel, "align center, wrap");
         this.add(loginCard, "align center, width 100%");
 
         loginCard.addEvent(new ActionListener() {
