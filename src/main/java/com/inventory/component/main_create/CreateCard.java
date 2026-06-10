@@ -89,12 +89,12 @@ public class CreateCard extends ShadowCard {
                 productNameText.getText().isEmpty() ||
                 categoryText.getText().isEmpty() ||
                 quantityText.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please enter all fields.", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             try {
                 insertData(productNameText.getText(), categoryText.getText(), Integer.parseInt(quantityText.getText()), (String) typeCombo.getSelectedItem());
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Please enter a number in the Quantity field.",  "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please enter a number in the Quantity field.",  "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -113,7 +113,7 @@ public class CreateCard extends ShadowCard {
 
         if (pData.getProductIDByName(name) == -1) { // if name doesnt exist: insert new product and get productID
             if (type.equals("Outgoing")) {
-                JOptionPane.showMessageDialog(this, "New product cannot be outgoing. You must have a stock first.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "New product cannot be outgoing. You must have a stock first.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             insertProductSuccessful = pData.insertProduct(name, category, 0);
@@ -126,7 +126,7 @@ public class CreateCard extends ShadowCard {
             categoryText.setText(existingCategory);
 
             if (pData.getCurrentStock(productID) < quantity && type.equals("Outgoing")) {
-                JOptionPane.showMessageDialog(this, "Outgoing quantity must be less than or equal to current stock!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Outgoing quantity must be less than or equal to current stock!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
@@ -137,12 +137,12 @@ public class CreateCard extends ShadowCard {
         insertProductSuccessful = pData.updateStock(productID, quantity, isIncoming);
 
         if (insertProductSuccessful && insertTransactionSuccessful) {
-            JOptionPane.showMessageDialog(this, "Product successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Product successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
             clearFields();
         } else if (!insertProductSuccessful) {
-            JOptionPane.showMessageDialog(this, "Product not added.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Product not added.", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "Transaction not added.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Transaction not added.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

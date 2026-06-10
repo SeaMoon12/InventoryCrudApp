@@ -95,7 +95,7 @@ public class DeleteCard extends ShadowCard {
                 Product product = pData.getProductByID(Integer.parseInt(dropdownSelectionText.getText()));
 
                 if (product == null) {
-                    JOptionPane.showMessageDialog(this, "Product ID does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Product ID does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -103,7 +103,7 @@ public class DeleteCard extends ShadowCard {
                 deleteSuccessful = pData.deleteProduct(Integer.parseInt(dropdownSelectionText.getText()));
 
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Please enter a number in the Product ID field.",  "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please enter a number in the Product ID field.",  "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         } else {
@@ -111,7 +111,7 @@ public class DeleteCard extends ShadowCard {
                 Transaction transaction = tData.getTransactionByID(Integer.parseInt(dropdownSelectionText.getText()));
 
                 if (transaction == null) {
-                    JOptionPane.showMessageDialog(this, "Transaction ID does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Transaction ID does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -129,16 +129,16 @@ public class DeleteCard extends ShadowCard {
 
                 deleteSuccessful = tData.deleteTransaction(Integer.parseInt(dropdownSelectionText.getText()));
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Please enter a number in the Transaction ID field.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please enter a number in the Transaction ID field.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
 
         if (deleteSuccessful) {
-            JOptionPane.showMessageDialog(this, dropdownSelectionLabel.getText() + " deleted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, dropdownSelectionLabel.getText() + " deleted!", "Success", JOptionPane.INFORMATION_MESSAGE);
             clearFields();
         } else {
-            JOptionPane.showMessageDialog(this, dropdownSelectionLabel.getText() + " could not be deleted.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, dropdownSelectionLabel.getText() + " could not be deleted.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

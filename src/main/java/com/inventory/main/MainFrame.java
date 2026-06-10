@@ -39,7 +39,7 @@ public class MainFrame extends javax.swing.JFrame {
                     if (!databaseConnected) {
                         JOptionPane.showMessageDialog(null, "You are not connected to the database!", "Error", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(MainFrame.this, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }

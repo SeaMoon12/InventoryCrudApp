@@ -99,7 +99,7 @@ public class UpdateCard extends ShadowCard {
                 } else if (selected.equals("Transaction") && !transactionFieldsEmpty) {
                     handleTransactionUpdate();
                 } else {
-                    JOptionPane.showMessageDialog(UpdateCard.this, "Please fill all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Please fill all fields.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -209,7 +209,7 @@ public class UpdateCard extends ShadowCard {
         Product product = pData.getProductByID(Integer.parseInt(productIDTextField.getText()));
 
         if (product == null) {
-            JOptionPane.showMessageDialog(this, "Product does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Product does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -256,7 +256,7 @@ public class UpdateCard extends ShadowCard {
             Product product = pData.getProductByID(Integer.parseInt(productIDTextField.getText()));
 
             if (product == null) {
-                JOptionPane.showMessageDialog(this, "Product does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Product does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -352,7 +352,7 @@ public class UpdateCard extends ShadowCard {
             boolean isNegativeAftSubtHomogenous = !isQuantityPositive && productStock < Math.abs(quantityChange) && !isSwitch; // Inc -> Inc or Outg -> Outg
             boolean isNegativeAftSubtHeterogenous = isSwitch && !isSwitchAndIncoming && productStock < Math.abs(quantityChange); // Inc -> Outg or Outg -> Inc
             if (isNegativeAftSubtHomogenous || isNegativeAftSubtHeterogenous) {
-                JOptionPane.showMessageDialog(UpdateCard.this, "Current stock is too small!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Current stock is too small!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
