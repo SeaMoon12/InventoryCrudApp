@@ -3,31 +3,22 @@ package com.inventory.component.main_dashboard;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class DashboardPageContents extends JPanel {
 
-    private StocksCard stock;
-    private Card2 card2;
-    private Card3 card3;
+    private JLabel titleLabel;
     private HistoryCard stockHistory;
-    private Card5 card5;
 
     public DashboardPageContents() {
-        this.setLayout(new MigLayout("fill, gap 8", "[grow, fill] [grow, fill] [30%!, fill]", "[30%!, fill] [grow, fill]"));
+        this.setLayout(new MigLayout("gap 8"));
 
-        stock = new StocksCard();
-        card2 = new Card2();
-        card3 = new Card3();
+        titleLabel = new JLabel("Dashboard");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
         stockHistory = new HistoryCard();
-        card5 = new Card5();
 
-        this.add(Box.createVerticalStrut(1), "cell 0 3");
-        this.add(stock, "cell 0 0, grow");
-        this.add(card2, "cell 1 0, grow");
-        this.add(card3, "cell 2 0 1 2, grow");
-        this.add(stockHistory, "cell 0 1 2 3, grow");
-        this.add(card5, "cell 2 2 1 2, grow");
+        this.add(titleLabel, "wrap");
+        this.add(stockHistory, "width 100%, height 100%");
     }
 
     public HistoryCard getStockHistory() {
