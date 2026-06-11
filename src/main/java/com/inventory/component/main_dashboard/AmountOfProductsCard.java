@@ -21,4 +21,8 @@ public class AmountOfProductsCard extends ShadowCard {
 
         this.add(amountOfProductsLabel);
     }
+
+    public void refresh() {
+        amountOfProductsLabel.setText("Products in stock: " + new Dashboard().getTotalProducts());
+    }
 }

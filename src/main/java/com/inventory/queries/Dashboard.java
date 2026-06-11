@@ -102,7 +102,7 @@ public class Dashboard {
         ResultSet rs = null;
         int total = 0;
 
-        String query = "SELECT COUNT(*) AS low_stock FROM product WHERE stock <= 10 AND stock != 0";
+        String query = "SELECT COUNT(*) AS low_stock FROM product WHERE (stock <= 10 AND stock != 0)";
 
         try {
             pstmt = conn.prepareStatement(query);

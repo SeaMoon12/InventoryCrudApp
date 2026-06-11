@@ -20,4 +20,8 @@ public class AmountOFLowStockCard extends ShadowCard {
 
         this.add(amountOfLowStockItemsLabel);
     }
+
+    public void refresh() {
+        amountOfLowStockItemsLabel.setText("Low stock items in stock: " + new Dashboard().getLowStockCount());
+    }
 }

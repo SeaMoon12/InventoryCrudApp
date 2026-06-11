@@ -20,4 +20,8 @@ public class AmountOfOutOfStockCard extends ShadowCard {
 
         this.add(amountOutOfStockItemsLabel);
     }
+
+    public void refresh() {
+        amountOutOfStockItemsLabel.setText("Out of stock items: " + new Dashboard().getOutOfStockCount());
+    }
 }

@@ -23,7 +23,7 @@ public class StocksCard extends ShadowCard {
         this.add(totalStock);
     }
 
-    public void refreshTotalStocks() {
-        totalStock.setText(String.valueOf(new Dashboard().getTotalStock()));
+    public void refresh() {
+        totalStock.setText("Total items in stock:" + String.valueOf(new Dashboard().getTotalStock()));
     }
 }

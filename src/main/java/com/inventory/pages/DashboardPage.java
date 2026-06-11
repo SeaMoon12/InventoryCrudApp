@@ -4,6 +4,7 @@ import com.inventory.component.dashboard.Header;
 import com.inventory.component.dashboard.MainPage;
 import com.inventory.component.dashboard.PageNavigatorListener;
 import com.inventory.component.dashboard.SidePanel;
+import com.inventory.component.main_dashboard.DashboardPageContents;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.ActionEvent;
@@ -38,7 +39,12 @@ public class DashboardPage extends javax.swing.JPanel {
             public void onNavigate(String pageName) {
                 if (pageName.equals("Dashboard")) {
                     // refresh table, because user cannot see table until user clicks the dashboard Sidebar button
-                    mainPage.getDashboardPageContents().getStockHistory().refreshTableData();
+                    DashboardPageContents dashboardPageContents = mainPage.getDashboardPageContents();
+                    dashboardPageContents.getStockHistory().refreshTableData();
+                    dashboardPageContents.getAmountOFLowStockCard().refresh();
+                    dashboardPageContents.getAmountOfOutOfStockCard().refresh();
+                    dashboardPageContents.getAmountOfProductsCard().refresh();
+                    dashboardPageContents.getStock().refresh();
                 } else if (pageName.equals("Logout")) {
                     logoutButtonListener.onLogout();
                     return;

@@ -32,4 +32,20 @@ public class DashboardPageContents extends JPanel {
     public HistoryCard getStockHistory() {
         return stockHistory;
     }
+
+    public AmountOFLowStockCard getAmountOFLowStockCard() {
+        return amountOFLowStockCard;
+    }
+
+    public AmountOfProductsCard getAmountOfProductsCard() {
+        return amountOfProductsCard;
+    }
+
+    public AmountOfOutOfStockCard getAmountOfOutOfStockCard() {
+        return amountOfOutOfStockCard;
+    }
+
+    public StocksCard getStock() {
+        return stock;
+    }
 }
