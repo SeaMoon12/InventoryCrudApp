@@ -8,6 +8,8 @@ import com.inventory.queries.TransactionData;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -54,10 +56,23 @@ public class HistoryCard extends ShadowCard {
             }
         });
 
-        searchTextField.addActionListener(new ActionListener() {
+        searchTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                handleLiveTextChange();
+            }
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void removeUpdate(DocumentEvent e) {
+                handleLiveTextChange();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                handleLiveTextChange();
+            }
+
+            private void handleLiveTextChange() {
                 pData.readAndSearchProducts(searchTextField.getText(), productsTableModel);
                 tData.readAndSearchTransactions(searchTextField.getText(), transactionsTableModel);
             }
