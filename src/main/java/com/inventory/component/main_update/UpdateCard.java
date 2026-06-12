@@ -26,7 +26,8 @@ public class UpdateCard extends ShadowCard {
 
     // products
     private JLabel productIDLabel;
-    private CustomTextField productIDTextField;
+    private String[] productIDOptions = {};
+    private JComboBox<String> productIDCombo;
     private JPanel productsPanel;
     private JLabel productNameLabel;
     private CustomTextField productNameTextField;
@@ -36,7 +37,8 @@ public class UpdateCard extends ShadowCard {
     // transactions
     private String[] transactionTypeOptions = {"Incoming", "Outgoing"};
     private JLabel transactionIDLabel;
-    private CustomTextField transactionIDTextField;
+    private String[] transactionIDOptions = {};
+    private JComboBox<String> transactionIDCombo;
     private JPanel transactionsPanel;
     private JLabel transactionQuantityLabel;
     private CustomTextField transactionQuantityTextField;
@@ -68,7 +70,7 @@ public class UpdateCard extends ShadowCard {
             }
         });
 
-        productIDTextField.addActionListener(new ActionListener() {
+        productIDCombo.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -76,7 +78,7 @@ public class UpdateCard extends ShadowCard {
             }
         });
 
-        transactionIDTextField.addActionListener(new ActionListener() {
+        transactionIDCombo.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,10 +90,10 @@ public class UpdateCard extends ShadowCard {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selected = (String) whatToUpdateDropdown.getSelectedItem();
-                boolean productFieldsEmpty = (productIDTextField.getText().isEmpty() ||
+                boolean productFieldsEmpty = (
                         productNameTextField.getText().isEmpty() ||
                         productCategoryTextField.getText().isEmpty());
-                boolean transactionFieldsEmpty = (transactionIDTextField.getText().isEmpty() ||
+                boolean transactionFieldsEmpty = (
                         transactionQuantityTextField.getText().isEmpty());
 
                 if (selected.equals("Product") && !productFieldsEmpty) {
@@ -114,7 +116,7 @@ public class UpdateCard extends ShadowCard {
         // Products
         productIDLabel = new JLabel("Product ID");
         productIDLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        productIDTextField = new CustomTextField(new Color(0xd9d9d9), "Enter product ID...");
+        productIDCombo = new JComboBox<>(productIDOptions);
 
         productsPanel = new RoundedPanel();
         productsPanel.setLayout(new MigLayout("insets 7"));
@@ -130,7 +132,7 @@ public class UpdateCard extends ShadowCard {
         // Transactions
         transactionIDLabel = new JLabel("Transaction ID");
         transactionIDLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        transactionIDTextField = new CustomTextField(new Color(0xd9d9d9), "Enter transaction ID...");
+        transactionIDCombo = new JComboBox<>(transactionIDOptions);
 
         transactionsPanel = new RoundedPanel();
         transactionsPanel.setLayout(new MigLayout("insets 7"));
@@ -149,10 +151,10 @@ public class UpdateCard extends ShadowCard {
         this.add(whatToUpdateDropdown, "width 100%, wrap");
 
         this.add(productIDLabel, "wrap");
-        this.add(productIDTextField, "width 100%, wrap");
+        this.add(productIDCombo, "width 100%, wrap");
 
         this.add(transactionIDLabel, "wrap");
-        this.add(transactionIDTextField, "width 100%, wrap");
+        this.add(transactionIDCombo, "width 100%, wrap");
 
         addUpdateDetailsPanels();
         this.add(productsPanel, "width 100%, height 100%, wrap");
@@ -185,11 +187,11 @@ public class UpdateCard extends ShadowCard {
         if (visibility) {
             productsPanel.setVisible(true);
             productIDLabel.setVisible(true);
-            productIDTextField.setVisible(true);
+            productIDCombo.setVisible(true);
         } else {
             productsPanel.setVisible(false);
             productIDLabel.setVisible(false);
-            productIDTextField.setVisible(false);
+            productIDCombo.setVisible(false);
         }
     }
 
@@ -197,16 +199,20 @@ public class UpdateCard extends ShadowCard {
         if (visibility) {
             transactionsPanel.setVisible(true);
             transactionIDLabel.setVisible(true);
-            transactionIDTextField.setVisible(true);
+            transactionIDCombo.setVisible(true);
         } else {
             transactionsPanel.setVisible(false);
             transactionIDLabel.setVisible(false);
-            transactionIDTextField.setVisible(false);
+            transactionIDCombo.setVisible(false);
         }
     }
 
     private void autoFillFieldsByProductID() {
-        Product product = pData.getProductByID(Integer.parseInt(productIDTextField.getText()));
+        if (productIDCombo.getSelectedItem() == null) {
+            return;
+        }
+
+        Product product = pData.getProductByID(Integer.parseInt(productIDCombo.getSelectedItem().toString()));
 
         if (product == null) {
             JOptionPane.showMessageDialog(null, "Product does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -221,7 +227,11 @@ public class UpdateCard extends ShadowCard {
     }
 
     private void autoFillFieldsByTransactionID() {
-        Transaction transaction = tData.getTransactionByID(Integer.parseInt(transactionIDTextField.getText()));
+        if (transactionIDCombo.getSelectedItem() == null) {
+            return;
+        }
+
+        Transaction transaction = tData.getTransactionByID(Integer.parseInt(transactionIDCombo.getSelectedItem().toString()));
 
         if (transaction == null) {
             JOptionPane.showMessageDialog(null, "Transaction does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -247,13 +257,13 @@ public class UpdateCard extends ShadowCard {
         int existingProductID = pData.getProductIDByName(newName);
 
         try {
-            if (existingProductID != -1 && existingProductID != Integer.parseInt(productIDTextField.getText())) {
+            if (existingProductID != -1 && existingProductID != Integer.parseInt(productIDCombo.getSelectedItem().toString())) {
                 nameExists = true;
             } else {
                 nameExists = false;
             }
 
-            Product product = pData.getProductByID(Integer.parseInt(productIDTextField.getText()));
+            Product product = pData.getProductByID(Integer.parseInt(productIDCombo.getSelectedItem().toString()));
 
             if (product == null) {
                 JOptionPane.showMessageDialog(null, "Product does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -296,11 +306,11 @@ public class UpdateCard extends ShadowCard {
                 }
 
                 boolean existingDetailsUpdate = pData.updateProductDetails(existingProductID, newName, existingCategory);
-                boolean productDeleted = pData.deleteProduct(Integer.parseInt(productIDTextField.getText()));
+                boolean productDeleted = pData.deleteProduct(Integer.parseInt(productIDCombo.getSelectedItem().toString()));
                 isSuccessful = stockMoved && productDeleted && transactionInserted && oldTransactionDeleted && existingDetailsUpdate;
             } else {
                 // Name is not a typo: just update normally
-                isSuccessful = pData.updateProductDetails(Integer.parseInt(productIDTextField.getText()), newName, productCategoryTextField.getText());
+                isSuccessful = pData.updateProductDetails(Integer.parseInt(productIDCombo.getSelectedItem().toString()), newName, productCategoryTextField.getText());
             }
 
             if (isSuccessful) {
@@ -322,7 +332,7 @@ public class UpdateCard extends ShadowCard {
         int quantityChange;
 
         try {
-            Transaction oldTransaction = tData.getTransactionByID(Integer.parseInt(transactionIDTextField.getText()));
+            Transaction oldTransaction = tData.getTransactionByID(Integer.parseInt(transactionIDCombo.getSelectedItem().toString()));
 
             if (oldTransaction == null) {
                 JOptionPane.showMessageDialog(null, "Transaction does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -376,13 +386,40 @@ public class UpdateCard extends ShadowCard {
     }
 
     private void clearFields() {
-        productIDTextField.setText("");
-        productNameTextField.setText("");
-        productCategoryTextField.setText("");
+        if (whatToUpdateDropdown.getSelectedItem().toString().equals("Product")) {
 
-        transactionIDTextField.setText("");
-        transactionQuantityTextField.setText("");
+            if (productIDCombo.getSelectedItem() != null) {
+                String currentSelectedID = productIDCombo.getSelectedItem().toString();
 
-        transactionTypeCombo.setSelectedIndex(0); // reset combo box
+                if (pData.getProductByID(Integer.parseInt(currentSelectedID)) == null) {
+                    productIDCombo.removeItem(productIDCombo.getSelectedItem());
+                }
+            }
+
+            productNameTextField.setText("");
+            productCategoryTextField.setText("");
+
+            if (productIDCombo.getItemCount() > 0) {
+                productIDCombo.setSelectedIndex(0);
+            }
+
+        } else {
+            transactionQuantityTextField.setText("");
+            transactionTypeCombo.setSelectedIndex(0);
+
+            if (transactionIDCombo.getItemCount() > 0) {
+                transactionIDCombo.setSelectedIndex(0);
+            }
+        }
+    }
+
+    public void setProductIDOptions(String[] options) {
+        this.productIDOptions = options;
+        this.productIDCombo.setModel(new DefaultComboBoxModel<>(productIDOptions));
+    }
+
+    public void setTransactionIDOptions(String[] options) {
+        this.transactionIDOptions = options;
+        this.transactionIDCombo.setModel(new DefaultComboBoxModel<>(transactionIDOptions));
     }
 }

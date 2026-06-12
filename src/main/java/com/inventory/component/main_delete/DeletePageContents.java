@@ -21,4 +21,8 @@ public class DeletePageContents extends JPanel {
         this.add(titleLabel, "wrap");
         this.add(deleteCard, "width 100%, height 100%");
     }
+
+    public DeleteCard getDeleteCard() {
+        return deleteCard;
+    }
 }

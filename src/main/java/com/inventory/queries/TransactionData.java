@@ -2,10 +2,8 @@ package com.inventory.queries;
 
 import com.inventory.main.DatabaseConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 public class TransactionData {
@@ -237,5 +235,28 @@ public class TransactionData {
             }
         }
         return isSuccess;
+    }
+
+    public String[] getTransactionIDArray() {
+        ArrayList<String> transactionIDArray = new ArrayList<String>();
+        Connection conn = DatabaseConnection.getConnection();
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        String query = "SELECT transaction_id FROM transaction";
+
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                transactionIDArray.add(rs.getString("transaction_id"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return transactionIDArray.toArray(new String[transactionIDArray.size()]);
     }
 }

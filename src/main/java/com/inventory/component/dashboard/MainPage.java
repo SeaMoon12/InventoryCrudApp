@@ -78,4 +78,12 @@ public class MainPage extends JPanel {
     public DashboardPageContents getDashboardPageContents() {
         return dashboardPageContents;
     }
+
+    public DeletePageContents getDeletePageContents() {
+        return deletePageContents;
+    }
+
+    public UpdatePageContents getUpdatePageContents() {
+        return updatePageContents;
+    }
 }

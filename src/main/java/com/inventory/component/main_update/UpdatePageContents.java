@@ -21,4 +21,8 @@ public class UpdatePageContents extends JPanel {
         this.add(titleLabel, "wrap");
         this.add(updateCard, "width 100%, height 100%");
     }
+
+    public UpdateCard getUpdateCard() {
+        return updateCard;
+    }
 }

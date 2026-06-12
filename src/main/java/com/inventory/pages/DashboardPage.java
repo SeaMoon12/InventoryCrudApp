@@ -5,13 +5,18 @@ import com.inventory.component.dashboard.MainPage;
 import com.inventory.component.dashboard.PageNavigatorListener;
 import com.inventory.component.dashboard.SidePanel;
 import com.inventory.component.main_dashboard.DashboardPageContents;
+import com.inventory.queries.ProductData;
+import com.inventory.queries.TransactionData;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class DashboardPage extends javax.swing.JPanel {
 
+    private ProductData pData = new ProductData();
+    private TransactionData tData = new TransactionData();
     private LogoutButtonListener logoutButtonListener;
     private SidePanel sidePanel;
     private Header header;
@@ -37,6 +42,10 @@ public class DashboardPage extends javax.swing.JPanel {
         sidePanel.setNavListener(new PageNavigatorListener() {
             @Override
             public void onNavigate(String pageName) {
+                mainPage.getDeletePageContents().getDeleteCard().setProductIDOptions(pData.getProductIDArray());
+                mainPage.getDeletePageContents().getDeleteCard().setTransactionIDOptions(tData.getTransactionIDArray());
+                mainPage.getUpdatePageContents().getUpdateCard().setProductIDOptions(pData.getProductIDArray());
+                mainPage.getUpdatePageContents().getUpdateCard().setTransactionIDOptions(tData.getTransactionIDArray());
                 if (pageName.equals("Dashboard")) {
                     // refresh table, because user cannot see table until user clicks the dashboard Sidebar button
                     DashboardPageContents dashboardPageContents = mainPage.getDashboardPageContents();

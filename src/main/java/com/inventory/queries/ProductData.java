@@ -3,10 +3,8 @@ package com.inventory.queries;
 import com.inventory.main.DatabaseConnection;
 
 import javax.swing.table.DefaultTableModel;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class ProductData {
 
@@ -254,5 +252,28 @@ public class ProductData {
             return true;
         }
         return updateStock(targetProductID, stockToMove, true);
+    }
+
+    public String[] getProductIDArray() {
+        ArrayList<String> productIDArray = new ArrayList<String>();
+        Connection conn = DatabaseConnection.getConnection();
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        String query = "SELECT productID FROM product";
+
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                productIDArray.add(rs.getString("productID"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return productIDArray.toArray(new String[productIDArray.size()]);
     }
 }

@@ -23,6 +23,6 @@ public class AmountOfProductsCard extends ShadowCard {
     }
 
     public void refresh() {
-        amountOfProductsLabel.setText("Products in stock: " + new Dashboard().getTotalProducts());
+        amountOfProductsLabel.setText("Total products: " + new Dashboard().getTotalProducts());
     }
 }
