@@ -11,14 +11,16 @@ public class DashboardPageContents extends JPanel {
     private AmountOFLowStockCard amountOFLowStockCard;
     private HistoryCard stockHistory;
     private AmountOfOutOfStockCard amountOfOutOfStockCard;
+    private String role;
 
-    public DashboardPageContents() {
+    public DashboardPageContents(String role) {
+        this.role = role;
         this.setLayout(new MigLayout("fill, gap 8", "[grow, fill] [grow, fill] [30%!, fill]", "[30%!, fill] [grow, fill]"));
 
         stock = new StocksCard();
         amountOfProductsCard = new AmountOfProductsCard();
         amountOFLowStockCard = new AmountOFLowStockCard();
-        stockHistory = new HistoryCard();
+        stockHistory = new HistoryCard(role);
         amountOfOutOfStockCard = new AmountOfOutOfStockCard();
 
         this.add(Box.createVerticalStrut(1), "cell 0 3");

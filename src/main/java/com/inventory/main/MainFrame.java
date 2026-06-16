@@ -4,6 +4,7 @@ import com.inventory.component.login.LoginButtonListener;
 import com.inventory.pages.DashboardPage;
 import com.inventory.pages.LoginPage;
 import com.inventory.pages.LogoutButtonListener;
+import com.inventory.queries.UserData;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -13,44 +14,51 @@ import java.awt.event.ActionListener;
 public class MainFrame extends javax.swing.JFrame {
 
     private LoginPage loginPage = new LoginPage();
-    private DashboardPage dashboardPage = new DashboardPage();
+    private DashboardPage dashboardPage;
+    private UserData uData = new UserData();
 
     public MainFrame() {
         setup();
 
         this.add(loginPage, "grow");
-        this.add(dashboardPage, "grow");
 
-        // set Initial visibility
         this.loginPage.setVisible(true);
-        this.dashboardPage.setVisible(false);
 
         loginPage.setLoginButtonListener(new LoginButtonListener() {
             @Override
             public void onLoginButtonClick(String username, String password) {
                 boolean databaseConnected = DatabaseConnection.getConnection() != null;
-                if (username.equals("admin") && password.equals("1234") && databaseConnected) {
-                    // Hide login page and show dashboard page
-                    loginPage.setVisible(false);
-                    dashboardPage.setVisible(true);
-                    dashboardPage.getMainPagePanel().getDashboardPageContents().getStockHistory().refreshTableData();
-                    loginPage.getLoginComponents().getloginCard().clearFields();
-                } else {
-                    if (!databaseConnected) {
-                        JOptionPane.showMessageDialog(null, "You are not connected to the database!", "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
-                    }
+                if (!databaseConnected) {
+                    JOptionPane.showMessageDialog(null, "You are not connected to the database!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            }
-        });
 
-        dashboardPage.setLogoutButtonListener(new LogoutButtonListener() {
+                com.inventory.queries.User loggedInUser = uData.getUserByCredentials(username, password);
 
-            @Override
-            public void onLogout() {
-                dashboardPage.setVisible(false);
-                loginPage.setVisible(true);
+                if (loggedInUser == null) {
+                    JOptionPane.showMessageDialog(null, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                String role = loggedInUser.getRole();
+
+                dashboardPage = new DashboardPage(role);
+                MainFrame.this.add(dashboardPage, "grow");
+                MainFrame.this.revalidate();
+
+                loginPage.setVisible(false);
+                dashboardPage.setVisible(true);
+                dashboardPage.getMainPagePanel().getDashboardPageContents().getStockHistory().refreshTableData();
+                loginPage.getLoginComponents().getloginCard().clearFields();
+
+                dashboardPage.setLogoutButtonListener(new LogoutButtonListener() {
+                    @Override
+                    public void onLogout() {
+                        dashboardPage.setVisible(false);
+                        MainFrame.this.remove(dashboardPage);
+                        loginPage.setVisible(true);
+                    }
+                });
             }
         });
     }

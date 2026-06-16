@@ -15,8 +15,11 @@ public class SidePanel extends JPanel {
     private SidePanelButton update;
     private SidePanelButton delete;
     private SidePanelButton logout;
+    private String role;
+    private SidePanelButton registerUser;
 
-    public SidePanel() {
+    public SidePanel(String role) {
+        this.role = role;
         this.setLayout(new MigLayout("insets 0, gapy 1:1:1, fillx"));
 
         this.title = new SidePanelTitle();
@@ -42,13 +45,27 @@ public class SidePanel extends JPanel {
         this.add(create, "height 7%, wrap, grow");
         this.add(update, "height 7%, wrap, grow");
         this.add(delete, "height 7%, wrap, grow");
+
+        if (role.equals("Admin")) {
+            this.registerUser = new SidePanelButton();
+            this.registerUser.setButtonName("Register User");
+            this.add(registerUser, "height 7%, wrap, grow");
+        }
+
         this.add(logout, "height 7%, wrap, grow");
+
+        if (role.equals("Viewer")) {
+            create.setEnabled(false);
+            create.setBackground(new Color(0x5a5a5a));
+            update.setEnabled(false);
+            update.setBackground(new Color(0x5a5a5a));
+            delete.setEnabled(false);
+            delete.setBackground(new Color(0x5a5a5a));
+        }
 
         dashboard.setListener(new SidePanelButtonListener() {
             @Override
             public void onButtonClick(SidePanelButton button) {
-                // when the dashboard button is clicked, we want to update the main page to show the dashboard page
-                // send to Dashboard.java -> MainPage.java
                 performActionOnClick(button.getButtonName().trim());
             }
         });
@@ -73,6 +90,15 @@ public class SidePanel extends JPanel {
                 performActionOnClick(button.getButtonName().trim());
             }
         });
+
+        if (role.equals("Admin") && registerUser != null) {
+            registerUser.setListener(new SidePanelButtonListener() {
+                @Override
+                public void onButtonClick(SidePanelButton button) {
+                    performActionOnClick(button.getButtonName().trim());
+                }
+            });
+        }
 
         logout.setListener(new SidePanelButtonListener() {
             @Override

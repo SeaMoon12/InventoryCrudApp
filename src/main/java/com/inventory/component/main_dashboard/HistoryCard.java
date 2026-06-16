@@ -5,6 +5,7 @@ import com.inventory.component.dashboard.ShadowCard;
 import com.inventory.main.DatabaseConnection;
 import com.inventory.queries.ProductData;
 import com.inventory.queries.TransactionData;
+import com.inventory.queries.UserData;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -22,7 +23,8 @@ public class HistoryCard extends ShadowCard {
 
     private JLabel cardTitle;
 
-    private String[] options = {"Products", "Transactions"};
+    private String role;
+    private String[] options;
     private JComboBox<String> tableDropdown;
     private JLabel selectedTable;
 
@@ -38,7 +40,19 @@ public class HistoryCard extends ShadowCard {
     private JScrollPane productsScrollPane;
     private JScrollPane transactionsScrollPane;
 
-    public HistoryCard() {
+    private UserData uData = new UserData();
+    private JTable usersTable;
+    private DefaultTableModel usersTableModel;
+    private JScrollPane usersScrollPane;
+
+    public HistoryCard(String role) {
+        this.role = role;
+        if (role.equals("Admin")) {
+            this.options = new String[]{"Products", "Transactions", "Users"};
+        } else {
+            this.options = new String[]{"Products", "Transactions"};
+        }
+
         this.setLayout(new MigLayout("fill, insets 20, hidemode 3", "", "[][grow]"));
 
         initComponents();
@@ -48,29 +62,20 @@ public class HistoryCard extends ShadowCard {
         displayData("Products");
 
         tableDropdown.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selected =  (String) tableDropdown.getSelectedItem();
+                String selected = (String) tableDropdown.getSelectedItem();
                 onSelectionPerform(selected);
             }
         });
 
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                handleLiveTextChange();
-            }
-
+            public void insertUpdate(DocumentEvent e) { handleLiveTextChange(); }
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                handleLiveTextChange();
-            }
-
+            public void removeUpdate(DocumentEvent e) { handleLiveTextChange(); }
             @Override
-            public void changedUpdate(DocumentEvent e) {
-                handleLiveTextChange();
-            }
+            public void changedUpdate(DocumentEvent e) { handleLiveTextChange(); }
 
             private void handleLiveTextChange() {
                 pData.readAndSearchProducts(searchTextField.getText(), productsTableModel);
@@ -117,6 +122,20 @@ public class HistoryCard extends ShadowCard {
         setupTable(productsTable, productsScrollPane);
         setupTable(transactionsTable, transactionsScrollPane);
 
+        if (role.equals("Admin")) {
+            String[] userTableColumns = {"User ID", "Username", "Role"};
+            usersTableModel = new DefaultTableModel(null, userTableColumns) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            usersTable = new JTable(usersTableModel);
+            usersScrollPane = new JScrollPane(usersTable);
+            setupTable(usersTable, usersScrollPane);
+            usersScrollPane.setVisible(false);
+        }
+
         productsScrollPane.setVisible(true);
         transactionsScrollPane.setVisible(false);
     }
@@ -136,6 +155,10 @@ public class HistoryCard extends ShadowCard {
         this.add(searchTextField, "wrap, align right, grow");
         this.add(productsScrollPane, "cell 0 1, span 2, grow");
         this.add(transactionsScrollPane, "cell 0 1, span 2, grow");
+
+        if (role.equals("Admin") && usersScrollPane != null) {
+            this.add(usersScrollPane, "cell 0 1, span 2, grow");
+        }
     }
 
     private void setupTable(JTable table, JScrollPane scrollPane) {
@@ -148,14 +171,21 @@ public class HistoryCard extends ShadowCard {
 
     private void onSelectionPerform(String selected) {
         selectedTable.setText(selected);
+        productsScrollPane.setVisible(false);
+        transactionsScrollPane.setVisible(false);
+        if (role.equals("Admin") && usersScrollPane != null) {
+            usersScrollPane.setVisible(false);
+        }
+
         if (selected.equals("Products")) {
-            transactionsScrollPane.setVisible(false);
             productsScrollPane.setVisible(true);
             displayData("Products");
         } else if (selected.equals("Transactions")) {
-            productsScrollPane.setVisible(false);
             transactionsScrollPane.setVisible(true);
             displayData("Transactions");
+        } else if (selected.equals("Users") && role.equals("Admin")) {
+            usersScrollPane.setVisible(true);
+            uData.readAllUsers(usersTableModel);
         }
         this.revalidate();
         this.repaint();
@@ -166,4 +196,7 @@ public class HistoryCard extends ShadowCard {
         tData.readAndSearchTransactions(searchTextField.getText(), transactionsTableModel);
     }
 
+    public void setUserIDOptions(String[] options) {
+        // placeholder wkkwwkk
+    }
 }
