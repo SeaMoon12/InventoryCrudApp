@@ -19,13 +19,15 @@ public class DashboardPage extends javax.swing.JPanel {
     private ProductData pData = new ProductData();
     private TransactionData tData = new TransactionData();
     private LogoutButtonListener logoutButtonListener;
+    private String role;
+    private com.inventory.queries.User loggedInUser;
     private SidePanel sidePanel;
     private Header header;
     private MainPage mainPage;
-    private String role;
 
-    public DashboardPage(String role) {
+    public DashboardPage(String role, com.inventory.queries.User loggedInUser) {
         this.role = role;
+        this.loggedInUser = loggedInUser;
         initMainComponents();
     }
 
@@ -36,7 +38,7 @@ public class DashboardPage extends javax.swing.JPanel {
         this.sidePanel = new SidePanel(role);
         this.add(this.sidePanel, "height 100%, pos 0al 0 20% 100%");
 
-        this.header = new Header();
+        this.header = new Header(loggedInUser);
         this.add(this.header, "height 10%, pos 20% 0 100% 10%");
 
         this.mainPage = new MainPage(role);

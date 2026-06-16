@@ -42,7 +42,7 @@ public class MainFrame extends javax.swing.JFrame {
 
                 String role = loggedInUser.getRole();
 
-                dashboardPage = new DashboardPage(role);
+                dashboardPage = new DashboardPage(role, loggedInUser);
                 MainFrame.this.add(dashboardPage, "grow");
                 MainFrame.this.revalidate();
 
