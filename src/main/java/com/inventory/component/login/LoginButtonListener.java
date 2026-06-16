@@ -1,5 +1,5 @@
 package com.inventory.component.login;
 
 public interface LoginButtonListener {
-    void onLoginButtonClick(String username, String password);
+    void onLoginButtonClick(String username, String password, String role);
 }

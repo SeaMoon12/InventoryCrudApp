@@ -63,6 +63,16 @@ public class DashboardPage extends javax.swing.JPanel {
         });
     }
 
+    public void applyRolePermissions(String role) {
+        boolean canCreate = role.equals("Operator") || role.equals("Manager");
+        boolean canUpdate = role.equals("Operator") || role.equals("Manager");
+        boolean canDelete = role.equals("Manager");
+
+        sidePanel.setCreateVisible(canCreate);
+        sidePanel.setUpdateVisible(canUpdate);
+        sidePanel.setDeleteVisible(canDelete);
+    }
+
     public MainPage getMainPagePanel() {
         return this.mainPage;
     }

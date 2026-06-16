@@ -4,16 +4,19 @@ import com.inventory.component.login.LoginButtonListener;
 import com.inventory.pages.DashboardPage;
 import com.inventory.pages.LoginPage;
 import com.inventory.pages.LogoutButtonListener;
+import com.inventory.pages.RegisterPage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainFrame extends javax.swing.JFrame {
 
     private LoginPage loginPage = new LoginPage();
     private DashboardPage dashboardPage = new DashboardPage();
+    private RegisterPage registerPage = new RegisterPage();
 
     public MainFrame() {
         setup();
@@ -21,18 +24,23 @@ public class MainFrame extends javax.swing.JFrame {
         this.add(loginPage, "grow");
         this.add(dashboardPage, "grow");
 
+        this.add(registerPage, "grow");
+        registerPage.setVisible(false);
+
         // set Initial visibility
         this.loginPage.setVisible(true);
         this.dashboardPage.setVisible(false);
 
         loginPage.setLoginButtonListener(new LoginButtonListener() {
             @Override
-            public void onLoginButtonClick(String username, String password) {
+            public void onLoginButtonClick(String username, String password, String role) {
                 boolean databaseConnected = DatabaseConnection.getConnection() != null;
-                if (username.equals("admin") && password.equals("1234") && databaseConnected) {
-                    // Hide login page and show dashboard page
+                boolean credentialsValid = role != null;
+
+                if (credentialsValid && databaseConnected) {
                     loginPage.setVisible(false);
                     dashboardPage.setVisible(true);
+                    dashboardPage.applyRolePermissions(role);
                     dashboardPage.getMainPagePanel().getDashboardPageContents().getStockHistory().refreshTableData();
                     loginPage.getLoginComponents().getloginCard().clearFields();
                 } else {
@@ -42,6 +50,16 @@ public class MainFrame extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
                     }
                 }
+
+                loginPage.getLoginComponents().getloginCard().addEvent(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if ("SHOW_REGISTER".equals(e.getActionCommand())) {
+                            loginPage.setVisible(false);
+                            registerPage.setVisible(true);
+                        }
+                    }
+                });
             }
         });
 

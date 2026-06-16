@@ -18,15 +18,15 @@ public class LoginPage extends javax.swing.JPanel {
 
         loginComponents.setLoginButtonListener(new LoginButtonListener() {
             @Override
-            public void onLoginButtonClick(String username, String password) {
-                onButtonClicked(username, password);
+            public void onLoginButtonClick(String username, String password, String role) {
+                onButtonClicked(username, password, role);
             }
         });
     }
 
-    private void onButtonClicked(String username, String password) {
+    private void onButtonClicked(String username, String password, String role) {
         if (loginButtonListener != null) {
-            loginButtonListener.onLoginButtonClick(username, password);
+            loginButtonListener.onLoginButtonClick(username, password, role);
         }
     }
 

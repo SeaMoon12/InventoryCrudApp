@@ -104,4 +104,16 @@ public class SidePanel extends JPanel {
         g2D.setPaint(colorGrad);
         g2D.fillRect(0, 0, getWidth(), getHeight());
     }
+
+    public void setCreateVisible(boolean visible) {
+        create.setVisible(visible);
+    }
+
+    public void setUpdateVisible(boolean visible) {
+        update.setVisible(visible);
+    }
+
+    public void setDeleteVisible(boolean visible) {
+        delete.setVisible(visible);
+    }
 }

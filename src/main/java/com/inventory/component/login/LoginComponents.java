@@ -1,11 +1,16 @@
 package com.inventory.component.login;
 
+import com.inventory.main.DatabaseConnection;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginComponents extends JPanel {
 
@@ -40,8 +45,26 @@ public class LoginComponents extends JPanel {
     }
 
     private void performLoginAction(String username, String password) {
-        if (this.loginButtonListener != null) {
-            this.loginButtonListener.onLoginButtonClick(username, password);
+        if (this.loginButtonListener == null) return;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT role FROM Users WHERE username = ? AND password = ?")) {
+
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String role = rs.getString("role");
+                    this.loginButtonListener.onLoginButtonClick(username, password, role);
+                } else {
+                    this.loginButtonListener.onLoginButtonClick(username, password, null);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Login query failed: " + e.getMessage());
+            this.loginButtonListener.onLoginButtonClick(username, password, null);
         }
     }
 

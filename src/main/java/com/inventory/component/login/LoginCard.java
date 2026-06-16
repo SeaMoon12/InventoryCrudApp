@@ -43,6 +43,21 @@ public class LoginCard extends JPanel implements ActionListener {
         this.add(passwordField, "grow, wrap");
 
         this.add(loginButton, "center, gapy 30");
+
+        JButton registerLink = new JButton("<HTML><U>New user? Register here</U></HTML>");
+        registerLink.setBorderPainted(false);
+        registerLink.setContentAreaFilled(false);
+        registerLink.setForeground(new Color(0x555555));
+        registerLink.setFont(new Font("Arial", Font.PLAIN, 11));
+        registerLink.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (actionListener != null) {
+                    actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "SHOW_REGISTER"));
+                }
+            }
+        });
+        this.add(registerLink, "center, gapy 5, wrap");
     }
 
     public String getUsername() {
