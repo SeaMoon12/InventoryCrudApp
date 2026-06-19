@@ -78,18 +78,38 @@ public class UserData {
     }
 
     // UPDATE
-    public boolean updateUser(int userID, String newUsername, String newRole) {
+    public boolean updateUser(int userID, String newUsername, String newRole, String newPassword, byte[] newProfilePicture) {
         Connection conn = DatabaseConnection.getConnection();
         PreparedStatement pstmt = null;
         boolean isSuccess = false;
 
-        String query = "UPDATE Users SET username = ?, role = ? WHERE userID = ?";
+        boolean updatePassword = newPassword != null && !newPassword.isEmpty();
+        boolean updatePicture = newProfilePicture != null;
+
+        String query;
+        if (updatePassword && updatePicture) {
+            query = "UPDATE Users SET username = ?, role = ?, password = ?, profile_picture = ? WHERE userID = ?";
+        } else if (updatePassword) {
+            query = "UPDATE Users SET username = ?, role = ?, password = ? WHERE userID = ?";
+        } else if (updatePicture) {
+            query = "UPDATE Users SET username = ?, role = ?, profile_picture = ? WHERE userID = ?";
+        } else {
+            query = "UPDATE Users SET username = ?, role = ? WHERE userID = ?";
+        }
 
         try {
             pstmt = conn.prepareStatement(query);
             pstmt.setString(1, newUsername);
             pstmt.setString(2, newRole);
-            pstmt.setInt(3, userID);
+
+            int paramIndex = 3;
+            if (updatePassword) {
+                pstmt.setString(paramIndex++, newPassword);
+            }
+            if (updatePicture) {
+                pstmt.setBytes(paramIndex++, newProfilePicture);
+            }
+            pstmt.setInt(paramIndex, userID);
 
             int rowsUpdated = pstmt.executeUpdate();
             if (rowsUpdated > 0) {
