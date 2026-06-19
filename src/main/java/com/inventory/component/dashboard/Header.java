@@ -37,8 +37,19 @@ public class Header extends JPanel {
         byte[] imageBytes = loggedInUser != null ? loggedInUser.getProfilePicture() : null;
 
         if (imageBytes != null && imageBytes.length > 0) {
-            ImageIcon rawIcon = new ImageIcon(imageBytes);
-            profilePictureLabel.setIcon(makeCircularIcon(rawIcon, 42));
+            try {
+                java.awt.image.BufferedImage decoded = javax.imageio.ImageIO.read(
+                        new java.io.ByteArrayInputStream(imageBytes)
+                );
+                if (decoded != null) {
+                    profilePictureLabel.setIcon(makeCircularIcon(new ImageIcon(decoded), 42));
+                } else {
+                    profilePictureLabel.setIcon(makeInitialsIcon(username, 42));
+                }
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+                profilePictureLabel.setIcon(makeInitialsIcon(username, 42));
+            }
         } else {
             profilePictureLabel.setIcon(makeInitialsIcon(username, 42));
         }

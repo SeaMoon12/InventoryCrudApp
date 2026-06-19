@@ -55,6 +55,12 @@ public class UpdateCard extends ShadowCard {
     private String[] userRoleOptions = {"Admin", "Operator", "Viewer"};
     private JLabel userRoleLabel;
     private JComboBox<String> userRoleCombo;
+    private JLabel userPasswordLabel;
+    private CustomTextField userPasswordTextField;
+    private JLabel userProfilePictureLabel;
+    private JLabel userProfilePicturePreview;
+    private CustomButton userChoosePictureButton;
+    private byte[] selectedUserImageBytes;
 
     private CustomButton updateButton;
 
@@ -120,10 +126,8 @@ public class UpdateCard extends ShadowCard {
                 boolean productFieldsEmpty = (
                         productNameTextField.getText().isEmpty() ||
                                 productCategoryTextField.getText().isEmpty());
-                boolean transactionFieldsEmpty = (
-                        transactionQuantityTextField.getText().isEmpty());
-                boolean userFieldsEmpty = (
-                        userUsernameTextField.getText().isEmpty());
+                boolean transactionFieldsEmpty = transactionQuantityTextField.getText().isEmpty();
+                boolean userFieldsEmpty = userUsernameTextField.getText().isEmpty();
 
                 if (selected.equals("Product") && !productFieldsEmpty) {
                     handleProductUpdate();
@@ -191,6 +195,27 @@ public class UpdateCard extends ShadowCard {
         userRoleLabel = new JLabel("Role");
         userRoleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         userRoleCombo = new JComboBox<>(userRoleOptions);
+
+        userPasswordLabel = new JLabel("New Password");
+        userPasswordLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        userPasswordTextField = new CustomTextField(Color.WHITE, "Leave blank to keep current...");
+
+        userProfilePictureLabel = new JLabel("Profile Picture");
+        userProfilePictureLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        userProfilePicturePreview = new JLabel("No new image selected");
+        userProfilePicturePreview.setPreferredSize(new Dimension(70, 70));
+        userProfilePicturePreview.setHorizontalAlignment(SwingConstants.CENTER);
+        userProfilePicturePreview.setOpaque(true);
+        userProfilePicturePreview.setBackground(new Color(0xd9d9d9));
+
+        userChoosePictureButton = new CustomButton("Change Picture");
+        userChoosePictureButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onChooseUserPictureClicked();
+            }
+        });
     }
 
     private void addComponents() {
@@ -229,10 +254,16 @@ public class UpdateCard extends ShadowCard {
         transactionsPanel.add(transactionTypeCombo, "width 100%, wrap");
 
         // Users Panel
+        // Users Panel
         usersPanel.add(userUsernameLabel, "wrap");
         usersPanel.add(userUsernameTextField, "width 100%, wrap");
-        usersPanel.add(userRoleLabel, "wrap");
+        usersPanel.add(userRoleLabel, "wrap, gapy 5");
         usersPanel.add(userRoleCombo, "width 100%, wrap");
+        usersPanel.add(userPasswordLabel, "wrap, gapy 5");
+        usersPanel.add(userPasswordTextField, "width 100%, wrap");
+        usersPanel.add(userProfilePictureLabel, "wrap, gapy 5");
+        usersPanel.add(userProfilePicturePreview, "wrap");
+        usersPanel.add(userChoosePictureButton, "wrap, gapy 3");
     }
 
     private void startInitialComponentVisibility() {
@@ -310,6 +341,50 @@ public class UpdateCard extends ShadowCard {
                 break;
             }
         }
+    }
+
+    private void onChooseUserPictureClicked() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select New Profile Picture");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Image files", "jpg", "jpeg", "png", "gif", "bmp"));
+
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            java.io.File selectedFile = fileChooser.getSelectedFile();
+            selectedUserImageBytes = readImageToBytes(selectedFile);
+
+            if (selectedUserImageBytes != null) {
+                try {
+                    java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(selectedFile);
+                    Image scaledImg = img.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+                    userProfilePicturePreview.setIcon(new ImageIcon(scaledImg));
+                    userProfilePicturePreview.setText("");
+                } catch (java.io.IOException e) {
+                    userProfilePicturePreview.setText("Preview failed");
+                }
+            }
+        }
+    }
+
+    private byte[] readImageToBytes(java.io.File file) {
+        byte[] imageBytes = null;
+        java.io.FileInputStream fis = null;
+        try {
+            fis = new java.io.FileInputStream(file);
+            imageBytes = new byte[(int) file.length()];
+            fis.read(imageBytes);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to read image file.", "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (fis != null) fis.close();
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return imageBytes;
     }
 
     private void autoFillFieldsByTransactionID() {
@@ -480,12 +555,22 @@ public class UpdateCard extends ShadowCard {
         int userID = Integer.parseInt(userIDCombo.getSelectedItem().toString());
         String newUsername = userUsernameTextField.getText();
         String newRole = (String) userRoleCombo.getSelectedItem();
+        String newPassword = userPasswordTextField.getText();
 
-        boolean isSuccessful = uData.updateUser(userID, newUsername, newRole);
+        // treat the placeholder text as "no change"
+        if (newPassword.equals("Leave blank to keep current...")) {
+            newPassword = "";
+        }
+
+        boolean isSuccessful = uData.updateUser(userID, newUsername, newRole, newPassword, selectedUserImageBytes);
 
         if (isSuccessful) {
             JOptionPane.showMessageDialog(null, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             userUsernameTextField.setText("");
+            userPasswordTextField.setText("");
+            userProfilePicturePreview.setIcon(null);
+            userProfilePicturePreview.setText("No new image selected");
+            selectedUserImageBytes = null;
             if (userIDCombo.getItemCount() > 0) {
                 userIDCombo.setSelectedIndex(0);
             }
