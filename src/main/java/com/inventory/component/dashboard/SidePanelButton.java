@@ -30,16 +30,19 @@ public class SidePanelButton extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (!isEnabled()) return;
                 performMousePressed();
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
+                if (!isEnabled()) return;
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
+                if (!isEnabled()) return;
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }
         });

@@ -3,6 +3,7 @@ package com.inventory.component.dashboard;
 import com.inventory.component.main_create.CreatePageContents;
 import com.inventory.component.main_dashboard.DashboardPageContents;
 import com.inventory.component.main_delete.DeletePageContents;
+import com.inventory.component.main_register.RegisterUserPageContents;
 import com.inventory.component.main_update.UpdatePageContents;
 import net.miginfocom.swing.MigLayout;
 
@@ -17,25 +18,32 @@ public class MainPage extends JPanel {
     private CreatePageContents createPageContents;
     private UpdatePageContents updatePageContents;
     private DeletePageContents deletePageContents;
+    private String role;
+    private RegisterUserPageContents registerUserPageContents;
 
-    public MainPage() {
+    public MainPage(String role) {
+        this.role = role;
         this.setLayout(new MigLayout("fill, insets 0, hidemode 3"));
         this.setBackground(new Color(0xd9d9d9));
 
-        dashboardPageContents = new DashboardPageContents();
+        dashboardPageContents = new DashboardPageContents(role);
         this.add(dashboardPageContents, "cell 0 0, grow");
 
         createPageContents = new CreatePageContents();
         this.add(createPageContents, "cell 0 0, grow");
 
-        updatePageContents = new UpdatePageContents();
+        updatePageContents = new UpdatePageContents(role);
         this.add(updatePageContents, "cell 0 0, grow");
 
-        deletePageContents = new DeletePageContents();
+        deletePageContents = new DeletePageContents(role);
         this.add(deletePageContents, "cell 0 0, grow");
 
+        if (role.equals("Admin")) {
+            registerUserPageContents = new RegisterUserPageContents();
+            this.add(registerUserPageContents, "cell 0 0, grow");
+        }
+
         hideAllPages();
-        // First view when user first opens the dashboard
         dashboardPageContents.setVisible(true);
     }
 
@@ -65,6 +73,12 @@ public class MainPage extends JPanel {
                     deletePageContents.setVisible(true);
                 }
             }
+            case "Register User" -> {
+                if (role.equals("Admin") && registerUserPageContents != null && !registerUserPageContents.isVisible()) {
+                    hideAllPages();
+                    registerUserPageContents.setVisible(true);
+                }
+            }
         }
     }
 
@@ -73,6 +87,9 @@ public class MainPage extends JPanel {
         createPageContents.setVisible(false);
         updatePageContents.setVisible(false);
         deletePageContents.setVisible(false);
+        if (registerUserPageContents != null) {
+            registerUserPageContents.setVisible(false);
+        }
     }
 
     public DashboardPageContents getDashboardPageContents() {

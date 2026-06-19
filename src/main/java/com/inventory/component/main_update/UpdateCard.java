@@ -4,10 +4,7 @@ import com.inventory.component.CustomButton;
 import com.inventory.component.CustomTextField;
 import com.inventory.component.RoundedPanel;
 import com.inventory.component.dashboard.ShadowCard;
-import com.inventory.queries.Product;
-import com.inventory.queries.ProductData;
-import com.inventory.queries.Transaction;
-import com.inventory.queries.TransactionData;
+import com.inventory.queries.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -45,9 +42,29 @@ public class UpdateCard extends ShadowCard {
     private JLabel transactionTypeLabel;
     private JComboBox<String> transactionTypeCombo;
 
+    private String role;
+    private UserData uData = new UserData();
+
+    // users (Admin only)
+    private JLabel userIDLabel;
+    private String[] userIDOptions = {};
+    private JComboBox<String> userIDCombo;
+    private JPanel usersPanel;
+    private JLabel userUsernameLabel;
+    private CustomTextField userUsernameTextField;
+    private String[] userRoleOptions = {"Admin", "Operator", "Viewer"};
+    private JLabel userRoleLabel;
+    private JComboBox<String> userRoleCombo;
+
     private CustomButton updateButton;
 
-    public UpdateCard() {
+    public UpdateCard(String role) {
+        this.role = role;
+
+        if (role.equals("Admin")) {
+            this.updateOptions = new String[]{"Product", "Transaction", "User"};
+        }
+
         this.setLayout(new MigLayout("fill, insets 25, hidemode 3"));
 
         initComponents();
@@ -56,22 +73,26 @@ public class UpdateCard extends ShadowCard {
         startInitialComponentVisibility();
 
         whatToUpdateDropdown.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selected = (String) whatToUpdateDropdown.getSelectedItem();
                 if (selected.equals("Product")) {
                     setProductsVisibility(true);
                     setTransactionsVisibility(false);
+                    setUsersVisibility(false);
                 } else if (selected.equals("Transaction")) {
                     setTransactionsVisibility(true);
                     setProductsVisibility(false);
+                    setUsersVisibility(false);
+                } else if (selected.equals("User")) {
+                    setUsersVisibility(true);
+                    setProductsVisibility(false);
+                    setTransactionsVisibility(false);
                 }
             }
         });
 
         productIDCombo.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 autoFillFieldsByProductID();
@@ -79,10 +100,16 @@ public class UpdateCard extends ShadowCard {
         });
 
         transactionIDCombo.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 autoFillFieldsByTransactionID();
+            }
+        });
+
+        userIDCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                autoFillFieldsByUserID();
             }
         });
 
@@ -92,14 +119,18 @@ public class UpdateCard extends ShadowCard {
                 String selected = (String) whatToUpdateDropdown.getSelectedItem();
                 boolean productFieldsEmpty = (
                         productNameTextField.getText().isEmpty() ||
-                        productCategoryTextField.getText().isEmpty());
+                                productCategoryTextField.getText().isEmpty());
                 boolean transactionFieldsEmpty = (
                         transactionQuantityTextField.getText().isEmpty());
+                boolean userFieldsEmpty = (
+                        userUsernameTextField.getText().isEmpty());
 
                 if (selected.equals("Product") && !productFieldsEmpty) {
                     handleProductUpdate();
                 } else if (selected.equals("Transaction") && !transactionFieldsEmpty) {
                     handleTransactionUpdate();
+                } else if (selected.equals("User") && !userFieldsEmpty) {
+                    handleUserUpdate();
                 } else {
                     JOptionPane.showMessageDialog(null, "Please fill all fields.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -144,6 +175,22 @@ public class UpdateCard extends ShadowCard {
         transactionTypeLabel = new JLabel("Transaction Type");
         transactionTypeLabel.setFont(new Font("Arial", Font.BOLD, 18));
         transactionTypeCombo = new JComboBox<>(transactionTypeOptions);
+
+        // Users (Admin only)
+        userIDLabel = new JLabel("User ID");
+        userIDLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        userIDCombo = new JComboBox<>(userIDOptions);
+
+        usersPanel = new RoundedPanel();
+        usersPanel.setLayout(new MigLayout("insets 7"));
+
+        userUsernameLabel = new JLabel("Username");
+        userUsernameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        userUsernameTextField = new CustomTextField(Color.WHITE, "Enter username...");
+
+        userRoleLabel = new JLabel("Role");
+        userRoleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        userRoleCombo = new JComboBox<>(userRoleOptions);
     }
 
     private void addComponents() {
@@ -156,9 +203,13 @@ public class UpdateCard extends ShadowCard {
         this.add(transactionIDLabel, "wrap");
         this.add(transactionIDCombo, "width 100%, wrap");
 
+        this.add(userIDLabel, "wrap");
+        this.add(userIDCombo, "width 100%, wrap");
+
         addUpdateDetailsPanels();
         this.add(productsPanel, "width 100%, height 100%, wrap");
         this.add(transactionsPanel, "width 100%, height 100%, wrap");
+        this.add(usersPanel, "width 100%, height 100%, wrap");
 
         updateButton = new CustomButton("Update");
         this.add(updateButton, "align right");
@@ -176,11 +227,18 @@ public class UpdateCard extends ShadowCard {
         transactionsPanel.add(transactionQuantityTextField, "width 100%, wrap");
         transactionsPanel.add(transactionTypeLabel, "wrap");
         transactionsPanel.add(transactionTypeCombo, "width 100%, wrap");
+
+        // Users Panel
+        usersPanel.add(userUsernameLabel, "wrap");
+        usersPanel.add(userUsernameTextField, "width 100%, wrap");
+        usersPanel.add(userRoleLabel, "wrap");
+        usersPanel.add(userRoleCombo, "width 100%, wrap");
     }
 
     private void startInitialComponentVisibility() {
         setProductsVisibility(true);
         setTransactionsVisibility(false);
+        setUsersVisibility(false);
     }
 
     private void setProductsVisibility(boolean visibility) {
@@ -207,6 +265,12 @@ public class UpdateCard extends ShadowCard {
         }
     }
 
+    private void setUsersVisibility(boolean visibility) {
+        userIDLabel.setVisible(visibility);
+        userIDCombo.setVisible(visibility);
+        usersPanel.setVisible(visibility);
+    }
+
     private void autoFillFieldsByProductID() {
         if (productIDCombo.getSelectedItem() == null) {
             return;
@@ -224,6 +288,28 @@ public class UpdateCard extends ShadowCard {
 
         productNameTextField.setText(productName);
         productCategoryTextField.setText(productCategory);
+    }
+
+    private void autoFillFieldsByUserID() {
+        if (userIDCombo.getSelectedItem() == null) {
+            return;
+        }
+
+        User user = uData.getUserByID(Integer.parseInt(userIDCombo.getSelectedItem().toString()));
+
+        if (user == null) {
+            JOptionPane.showMessageDialog(null, "User does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        userUsernameTextField.setText(user.getUsername());
+        String existingRole = user.getRole();
+        for (int i = 0; i < userRoleOptions.length; i++) {
+            if (userRoleOptions[i].equals(existingRole)) {
+                userRoleCombo.setSelectedIndex(i);
+                break;
+            }
+        }
     }
 
     private void autoFillFieldsByTransactionID() {
@@ -385,6 +471,29 @@ public class UpdateCard extends ShadowCard {
         }
     }
 
+    private void handleUserUpdate() {
+        if (userIDCombo.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Please select a User ID.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int userID = Integer.parseInt(userIDCombo.getSelectedItem().toString());
+        String newUsername = userUsernameTextField.getText();
+        String newRole = (String) userRoleCombo.getSelectedItem();
+
+        boolean isSuccessful = uData.updateUser(userID, newUsername, newRole);
+
+        if (isSuccessful) {
+            JOptionPane.showMessageDialog(null, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            userUsernameTextField.setText("");
+            if (userIDCombo.getItemCount() > 0) {
+                userIDCombo.setSelectedIndex(0);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "User update failed.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void clearFields() {
         if (whatToUpdateDropdown.getSelectedItem().toString().equals("Product")) {
 
@@ -421,5 +530,10 @@ public class UpdateCard extends ShadowCard {
     public void setTransactionIDOptions(String[] options) {
         this.transactionIDOptions = options;
         this.transactionIDCombo.setModel(new DefaultComboBoxModel<>(transactionIDOptions));
+    }
+
+    public void setUserIDOptions(String[] options) {
+        this.userIDOptions = options;
+        this.userIDCombo.setModel(new DefaultComboBoxModel<>(userIDOptions));
     }
 }

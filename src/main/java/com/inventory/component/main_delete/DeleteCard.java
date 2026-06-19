@@ -3,10 +3,7 @@ package com.inventory.component.main_delete;
 import com.inventory.component.CustomButton;
 import com.inventory.component.CustomTextField;
 import com.inventory.component.dashboard.ShadowCard;
-import com.inventory.queries.Product;
-import com.inventory.queries.ProductData;
-import com.inventory.queries.Transaction;
-import com.inventory.queries.TransactionData;
+import com.inventory.queries.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -33,9 +30,22 @@ public class DeleteCard extends ShadowCard {
     private String[] transactionIDOptions = {};
     private JComboBox<String> transactionIDCombo;
 
+    private String role;
+    private UserData uData = new UserData();
+
+    private JLabel userIDLabel;
+    private String[] userIDOptions = {};
+    private JComboBox<String> userIDCombo;
+
     private CustomButton deleteButton;
 
-    public DeleteCard() {
+    public DeleteCard(String role) {
+        this.role = role;
+
+        if (role.equals("Admin")) {
+            this.options = new String[]{"Data", "Transaction", "User"};
+        }
+
         initComponents();
         addComponents();
 
@@ -48,7 +58,6 @@ public class DeleteCard extends ShadowCard {
         });
 
         deleteButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 onButtonClick();
@@ -71,6 +80,10 @@ public class DeleteCard extends ShadowCard {
         transactionIDLabel.setFont(new Font("Arial", Font.BOLD, 18));
         transactionIDCombo = new JComboBox<>(transactionIDOptions);
 
+        userIDLabel = new JLabel("User ID");
+        userIDLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        userIDCombo = new JComboBox<>(userIDOptions);
+
         deleteButton = new CustomButton("Delete");
     }
 
@@ -84,32 +97,58 @@ public class DeleteCard extends ShadowCard {
         this.add(transactionIDLabel, "cell 0 2, wrap");
         this.add(transactionIDCombo, "cell 0 3, width 100%, wrap");
 
+        this.add(userIDLabel, "cell 0 2, wrap");
+        this.add(userIDCombo, "cell 0 3, width 100%, wrap");
+
         this.add(deleteButton, "align right");
 
         productIDLabel.setVisible(true);
         productIDCombo.setVisible(true);
         transactionIDLabel.setVisible(false);
         transactionIDCombo.setVisible(false);
+        userIDLabel.setVisible(false);
+        userIDCombo.setVisible(false);
     }
 
     private void onDropdownSelected(String selected) {
-        switchVisibility();
+        productIDLabel.setVisible(false);
+        productIDCombo.setVisible(false);
+        transactionIDLabel.setVisible(false);
+        transactionIDCombo.setVisible(false);
+        userIDLabel.setVisible(false);
+        userIDCombo.setVisible(false);
+
+        if (selected.equals("Data")) {
+            productIDLabel.setVisible(true);
+            productIDCombo.setVisible(true);
+        } else if (selected.equals("Transaction")) {
+            transactionIDLabel.setVisible(true);
+            transactionIDCombo.setVisible(true);
+        } else if (selected.equals("User")) {
+            userIDLabel.setVisible(true);
+            userIDCombo.setVisible(true);
+        }
     }
 
     private void onButtonClick() {
-        boolean deleteSuccessful;
+        boolean deleteSuccessful = false;
 
-        if ((productIDCombo.getSelectedItem() == null && productIDCombo.isVisible()) || (transactionIDCombo.getSelectedItem() == null && transactionIDCombo.isVisible())) {
-            JOptionPane.showMessageDialog(null, "Please choose an ID to delete!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        String selected = dropdown.getSelectedItem().toString();
 
-        if (dropdown.getSelectedItem().toString().equals("Data")) {
+        if (selected.equals("Data")) {
+            if (productIDCombo.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(null, "Please choose a Product ID to delete!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             Product product = pData.getProductByID(Integer.parseInt(productIDCombo.getSelectedItem().toString()));
-
             tData.deleteAllTransactionsByProductID(product.getProductID());
             deleteSuccessful = pData.deleteProduct(product.getProductID());
-        } else {
+
+        } else if (selected.equals("Transaction")) {
+            if (transactionIDCombo.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(null, "Please choose a Transaction ID to delete!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             Transaction transaction = tData.getTransactionByID(Integer.parseInt(transactionIDCombo.getSelectedItem().toString()));
             Product product = pData.getProductByID(transaction.getProductID());
 
@@ -122,8 +161,15 @@ public class DeleteCard extends ShadowCard {
                 return;
             }
             pData.updateStock(transaction.getProductID(), quantityDeleted, !isIncoming);
-
             deleteSuccessful = tData.deleteTransaction(transaction.getTransactionID());
+
+        } else if (selected.equals("User")) {
+            if (userIDCombo.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(null, "Please choose a User ID to delete!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int userID = Integer.parseInt(userIDCombo.getSelectedItem().toString());
+            deleteSuccessful = uData.deleteUser(userID);
         }
 
         if (deleteSuccessful) {
@@ -150,13 +196,13 @@ public class DeleteCard extends ShadowCard {
                 transactionIDCombo.setSelectedIndex(0);
             }
         }
-    }
 
-    private void switchVisibility() {
-        productIDLabel.setVisible(!productIDLabel.isVisible());
-        productIDCombo.setVisible(!productIDCombo.isVisible());
-        transactionIDLabel.setVisible(!transactionIDLabel.isVisible());
-        transactionIDCombo.setVisible(!transactionIDCombo.isVisible());
+        if (userIDCombo.isVisible() && userIDCombo.getSelectedItem() != null) {
+            userIDCombo.removeItem(userIDCombo.getSelectedItem());
+            if (userIDCombo.getItemCount() > 0) {
+                userIDCombo.setSelectedIndex(0);
+            }
+        }
     }
 
     public void setProductIDOptions(String[] options) {
@@ -167,5 +213,10 @@ public class DeleteCard extends ShadowCard {
     public void setTransactionIDOptions(String[] options) {
         this.transactionIDOptions = options;
         this.transactionIDCombo.setModel(new DefaultComboBoxModel<>(transactionIDOptions));
+    }
+
+    public void setUserIDOptions(String[] options) {
+        this.userIDOptions = options;
+        this.userIDCombo.setModel(new DefaultComboBoxModel<>(userIDOptions));
     }
 }
